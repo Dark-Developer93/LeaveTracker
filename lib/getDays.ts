@@ -36,7 +36,17 @@ import dayjs from "dayjs";
 //   }
 // };
 
-export const getDays = (month = dayjs().month(), year = dayjs().year()) => {
+// defind a return interface for the getDays function
+export type Day = {
+  currentMonth: boolean;
+  date: dayjs.Dayjs;
+  today?: dayjs.Dayjs;
+};
+
+export const getDays = (
+  month = dayjs().month(),
+  year = dayjs().year()
+): Day[] => {
   const firstDayOfMonth = dayjs().year(year).month(month).startOf("month");
   const lastDayOfMonth = dayjs().year(year).month(month).endOf("month");
 
