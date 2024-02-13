@@ -29,7 +29,7 @@ const SideBar = ({ user }: SideBarProps) => {
         {/* TOP PART  */}
         <div>
           <div className="my-8">
-            <Image src="/spana-b.png" width={50} height={50} alt="logo" />
+            <Image src="/logo.png" width={50} height={50} alt="logo" />
           </div>
 
           <nav className="flex flex-col items-center px-3 overflow-y-auto">
