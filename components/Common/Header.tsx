@@ -38,8 +38,10 @@ const Header = ({ user }: HeaderProps) => {
                 <PiBellRingingDuotone size={28} />
               </button>
               <Avatar>
-                <AvatarImage src={user.image as string} alt="user image" />
-                <AvatarFallback>RC</AvatarFallback>
+                <AvatarImage src={user?.image as string} alt="user image" />
+                <AvatarFallback>
+                  {user.name?.charAt(0).toUpperCase()}
+                </AvatarFallback>
               </Avatar>
 
               <DropdownMenu>
@@ -49,7 +51,7 @@ const Header = ({ user }: HeaderProps) => {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
-                  <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
+                  <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>Profile</DropdownMenuItem>
                   <DropdownMenuItem>Support</DropdownMenuItem>
