@@ -12,6 +12,7 @@ import {
   TableRow,
   TableCell,
 } from "@/components/ui/table";
+import AddCredits from "./AddCredits";
 
 type UsersTableProps = {
   users: User[];
@@ -39,8 +40,8 @@ const UsersTable = ({ users }: UsersTableProps) => {
             <TableCell className="font-medium">
               <Avatar>
                 <AvatarImage
-                  src={user.image as string}
-                  alt={user.name as string}
+                  src={user?.image as string}
+                  alt={user?.name as string}
                 />
                 <AvatarFallback>
                   {" "}
@@ -48,23 +49,28 @@ const UsersTable = ({ users }: UsersTableProps) => {
                 </AvatarFallback>
               </Avatar>
             </TableCell>
-            <TableCell className="font-medium">{user.name}</TableCell>
-            <TableCell>{user.email}</TableCell>
-            <TableCell>{user.phone}</TableCell>
+            <TableCell className="font-medium">{user?.name}</TableCell>
+            <TableCell>{user?.email}</TableCell>
+            <TableCell>{user?.phone}</TableCell>
             <TableCell>
               <Badge variant="outline">{user.department}</Badge>
             </TableCell>
             <TableCell>
-              <Badge variant="secondary" className="p-0">
-                {user.title}
-              </Badge>
+              <Badge variant="secondary">{user.title}</Badge>
             </TableCell>
-            <TableCell className="">{user.role}</TableCell>
-            <TableCell className="text-right">
+            <TableCell className="">{user?.role}</TableCell>
+            <TableCell
+            // className="text-right"
+            >
               <p>/</p>
             </TableCell>
-            <TableCell className="text-right">
-              <p>+</p>
+            <TableCell
+            // className="text-right"
+            >
+              <AddCredits
+                email={user.email as string}
+                name={user.name as string}
+              />
             </TableCell>
             {/* <TableCell className="text-left">
               <Button
