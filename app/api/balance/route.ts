@@ -44,6 +44,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    // TODO: make the update only to admin with Certain permissions
     if (existingCredits) {
       return NextResponse.json(
         "Credits for the current period already exists",
