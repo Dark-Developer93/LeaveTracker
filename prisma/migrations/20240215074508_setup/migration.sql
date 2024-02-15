@@ -43,7 +43,7 @@ CREATE TABLE "VerificationToken" (
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "name" TEXT,
-    "email" TEXT NOT NULL,
+    "email" TEXT,
     "emailVerified" TIMESTAMP(3),
     "image" TEXT,
     "role" "Role" NOT NULL DEFAULT 'USER',
@@ -75,7 +75,7 @@ CREATE TABLE "Leave" (
     "endDate" TIMESTAMP(3) NOT NULL,
     "days" INTEGER NOT NULL,
     "userName" TEXT NOT NULL,
-    "UserNote" TEXT,
+    "userNote" TEXT,
     "tasksLink" TEXT,
     "userEmail" TEXT NOT NULL,
     "status" "LeaveStatus" NOT NULL DEFAULT 'PENDING',
@@ -103,12 +103,12 @@ CREATE TABLE "Balances" (
     "maternityCredit" INTEGER DEFAULT 0,
     "maternityUsed" INTEGER DEFAULT 0,
     "maternityAvailable" INTEGER DEFAULT 0,
+    "familyCredit" INTEGER DEFAULT 0,
+    "familyUsed" INTEGER DEFAULT 0,
+    "familyAvailable" INTEGER DEFAULT 0,
     "paternityCredit" INTEGER DEFAULT 0,
     "paternityUsed" INTEGER DEFAULT 0,
     "paternityAvailable" INTEGER DEFAULT 0,
-    "familyCareCredit" INTEGER DEFAULT 0,
-    "familyCareUsed" INTEGER DEFAULT 0,
-    "familyCareAvailable" INTEGER DEFAULT 0,
     "unpaidUsed" INTEGER DEFAULT 0,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
@@ -122,7 +122,7 @@ CREATE TABLE "Events" (
     "title" TEXT NOT NULL,
     "description" TEXT,
     "startDate" TIMESTAMP(3) NOT NULL,
-    "endDate" TIMESTAMP(3) NOT NULL,
+    "endDate" TIMESTAMP(3),
 
     CONSTRAINT "Events_pkey" PRIMARY KEY ("id")
 );
