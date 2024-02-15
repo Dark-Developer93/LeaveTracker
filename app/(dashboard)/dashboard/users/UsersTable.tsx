@@ -13,6 +13,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import AddCredits from "./AddCredits";
+import EditUser from "./EditUser";
 
 type UsersTableProps = {
   users: User[];
@@ -62,7 +63,7 @@ const UsersTable = ({ users }: UsersTableProps) => {
             <TableCell
             // className="text-right"
             >
-              <p>/</p>
+              <EditUser user={user} />
             </TableCell>
             <TableCell
             // className="text-right"
@@ -72,24 +73,6 @@ const UsersTable = ({ users }: UsersTableProps) => {
                 name={user.name as string}
               />
             </TableCell>
-            {/* <TableCell className="text-left">
-              <Button
-                variant="link"
-                className="text-blue-600 hover:text-blue-800 p-0"
-                onClick={() => console.log("edit")}
-              >
-                Edit
-              </Button>
-            </TableCell>
-            <TableCell>
-              <Button
-                variant="link"
-                className="text-blue-600 hover:text-blue-800 p-0"
-                onClick={() => console.log("Add")}
-              >
-                Add Leave Credits
-              </Button>
-            </TableCell> */}
           </TableRow>
         ))}
       </TableBody>
