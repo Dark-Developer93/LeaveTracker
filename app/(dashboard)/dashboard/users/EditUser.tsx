@@ -179,7 +179,7 @@ const EditUser = ({ user }: EditUserProps) => {
               </FormItem>
             )}
           />
-          <FormField
+          <FormField // TODO: check if the user who edits the role is an admin and not a normal user or moderaotor.
             control={form.control}
             name="title"
             render={({ field }) => (
@@ -238,64 +238,62 @@ const EditUser = ({ user }: EditUserProps) => {
             )}
           />
 
-          {user.role === "ADMIN" && (
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Role</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className={cn(
-                            " justify-between",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value
-                            ? UserRoles.find((role) => role === field.value)
-                            : "Select a role"}
-                          <PiCaretUpDownBold className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[200px] p-0">
-                      <Command>
-                        <CommandInput placeholder="Search a role..." />
-                        <CommandEmpty>No role found.</CommandEmpty>
-                        <CommandGroup>
-                          {UserRoles.map((role, i) => (
-                            <CommandItem
-                              value={role}
-                              key={i}
-                              onSelect={() => {
-                                form.setValue("role", role);
-                              }}
-                            >
-                              <BsCheckLg
-                                className={cn(
-                                  "mr-2 h-4 w-4",
-                                  role === field.value
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
-                              {role}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Role</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          " justify-between",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value
+                          ? UserRoles.find((role) => role === field.value)
+                          : "Select a role"}
+                        <PiCaretUpDownBold className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search a role..." />
+                      <CommandEmpty>No role found.</CommandEmpty>
+                      <CommandGroup>
+                        {UserRoles.map((role, i) => (
+                          <CommandItem
+                            value={role}
+                            key={i}
+                            onSelect={() => {
+                              form.setValue("role", role);
+                            }}
+                          >
+                            <BsCheckLg
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                role === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {role}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <Button type="submit">Submit</Button>
         </form>
