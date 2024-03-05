@@ -1,4 +1,7 @@
-import { PiBellRingingDuotone } from "react-icons/pi";
+"use client";
+
+import { useState } from "react";
+// import { PiBellRingingDuotone } from "react-icons/pi";
 import { BiSolidChevronDown } from "react-icons/bi";
 import {
   DropdownMenu,
@@ -14,12 +17,15 @@ import SideBarDrawer from "./SideBarDrawer";
 import ToggleDarkLight from "./ToggleDarkLight";
 import { User } from "@prisma/client";
 import LogoutBtn from "./LogoutBtn";
+import DialogWrapper from "./DialogWrapper";
 
 type HeaderProps = {
   user: User;
 };
 
 const Header = ({ user }: HeaderProps) => {
+  const [open, setOpen] = useState(false);
+
   return (
     <Container>
       <header className=" z-10 bg-white rounded-md shadow-sm dark:bg-black dark:border-b ">
@@ -54,8 +60,31 @@ const Header = ({ user }: HeaderProps) => {
                 <DropdownMenuContent className="w-56">
                   <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="cursor-pointer">Profile</DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer">Support</DropdownMenuItem>
+                  {/* TODO: Create the Profile Page */}
+                  <DropdownMenuItem className="hover:underline cursor-pointer">
+                    Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer">
+                    <DialogWrapper
+                      linkTitle="Support"
+                      title="Support Dialog"
+                      description=" This is the support dialog"
+                      isLink={true}
+                      open={open}
+                      setOpen={() => setOpen(!open)}
+                      onClick={(event) => event.stopPropagation()}
+                    >
+                      <p>
+                        Please for any issue contact us by sending an email to{" "}
+                        <a
+                          className="text-slate-500 dark:text-muted-foregroun"
+                          href="mailto:Test@gmail.com"
+                        >
+                          test@gmail.com
+                        </a>
+                      </p>
+                    </DialogWrapper>
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <div className="flex items-center gap-3 justify-center py-2.5 ">
                     <LogoutBtn />
