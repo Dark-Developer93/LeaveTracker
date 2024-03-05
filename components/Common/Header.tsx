@@ -34,9 +34,10 @@ const Header = ({ user }: HeaderProps) => {
             {/* RIGHT SIDE  */}
 
             <div className="flex items-center space-x-3 md:space-x-6">
-              <button className="p-2 bg-blue-100 rounded-full text-blue-500">
+              {/* TODO: add a notification component */}
+              {/* <button className="p-2 bg-blue-100 rounded-full text-blue-500">
                 <PiBellRingingDuotone size={28} />
-              </button>
+              </button> */}
               <Avatar>
                 <AvatarImage src={user?.image as string} alt="user image" />
                 <AvatarFallback>
@@ -53,15 +54,13 @@ const Header = ({ user }: HeaderProps) => {
                 <DropdownMenuContent className="w-56">
                   <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem>Support</DropdownMenuItem>
-
-                  <div className="flex flex-col items-center space-y-6 ">
+                  <DropdownMenuItem className="cursor-pointer">Profile</DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer">Support</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <div className="flex items-center gap-3 justify-center py-2.5 ">
                     <LogoutBtn />
                     <ToggleDarkLight />
                   </div>
-
-                  <DropdownMenuSeparator />
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
