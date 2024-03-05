@@ -4,8 +4,13 @@ import dayjs from "dayjs";
 import Container from "@/components/Common/Container";
 import CalendarBody from "@/app/(portal)/portal/CalendarBody";
 import CalendarHeader from "@/app/(portal)/portal/CalendarHeader";
+import { Events } from "@prisma/client";
 
-const Calendar = () => {
+type CalendarProps = {
+  events: Events[]
+}
+
+const Calendar = ({events}: CalendarProps) => {
   const currentDate = dayjs();
 
   const [today, setToday] = useState(currentDate);
@@ -17,7 +22,7 @@ const Calendar = () => {
         setToday={setToday}
         currentDate={currentDate}
       />
-      <CalendarBody today={today} />
+      <CalendarBody today={today} events={events} />
     </Container>
   );
 };
