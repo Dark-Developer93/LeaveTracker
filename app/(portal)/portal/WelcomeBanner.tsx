@@ -1,6 +1,6 @@
 import Container from "@/components/Common/Container";
-import DialogWrapper from "@/components/Common/DialogWrapper";
 import { User } from "@prisma/client";
+import RequestForm from "./RequestForm";
 
 type Props = {
   user: User;
@@ -20,14 +20,7 @@ const WelcomeBanner = ({ user }: Props) => {
         {/* RIGHT SIDE */}
 
         <div className="flex items-center space-x-3 md:space-x-6">
-          <DialogWrapper
-            btnTitle="Apply for a Leave"
-            title="Submit your leave Application"
-            description="Please fill out the form below with the right dates for your leave."
-            isBtn={true}
-          >
-            <p>Hi</p>
-          </DialogWrapper>
+            <RequestForm user={user}/>
         </div>
       </div>
     </Container>
