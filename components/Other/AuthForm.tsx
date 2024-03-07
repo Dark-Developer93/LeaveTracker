@@ -4,6 +4,7 @@ import { Icons } from "@/components/Other/icons";
 import { Button } from "@/components/ui/button";
 import { ClientSafeProvider, getProviders, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { Skeleton } from "../ui/skeleton";
 
 export const AuthForm = (): JSX.Element => {
   const [providers, setProviders] = useState<
@@ -31,9 +32,10 @@ export const AuthForm = (): JSX.Element => {
         </div>
       </div>
 
-      {providers &&
-        !!Object.keys(providers).length &&
-        Object.values(providers!).map((provider) => (
+      {Object.keys(providers).length === 0 ? (
+        <Skeleton className="h-10 w-[350px]" />
+      ) : (
+        Object.values(providers).map((provider) => (
           <Button
             key={provider.name}
             variant="outline"
@@ -41,14 +43,15 @@ export const AuthForm = (): JSX.Element => {
             onClick={() =>
               signIn(provider.id, {
                 callbackUrl: "/portal",
-                //   redirect: false
+                // redirect: false
               })
             }
           >
             <Icons.google className="mr-2 h-4 w-4" />
             Google
           </Button>
-        ))}
+        ))
+      )}
     </div>
   );
 };
