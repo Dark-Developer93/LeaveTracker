@@ -31,9 +31,19 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 
-const AddEvent = () => {
-  const router = useRouter()
-  
+interface EventFormProps {
+  mode: "add" | "update";
+  initialState?: {
+    id: string;
+    title: string;
+    description: string;
+    startDate: Date;
+  };
+}
+
+const EventForm = ({ mode, initialState }: EventFormProps) => {
+  const router = useRouter();
+
   const formSchema = z.object({
     title: z
       .string({
@@ -52,11 +62,14 @@ const AddEvent = () => {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
+    defaultValues: initialState || {
       title: "",
-      description: ""
+      description: "",
+      startDate: new Date(),
     },
   });
+
+  console.log("initialState", initialState);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
@@ -65,15 +78,20 @@ const AddEvent = () => {
         startDate: values.startDate.toISOString(),
       };
 
-      const res = await fetch("/api/event", {
-        method: "POST",
+      const endpoint = mode === "add" ? "/api/event" : "/api/event/eventId";
+      const method = mode === "add" ? "POST" : "PATCH";
+
+      const res = await fetch(endpoint, {
+        method,
         body: JSON.stringify(formattedValues),
       });
- 
+
       if (res.ok) {
-        toast.success("Event Added", { duration: 4000 });
-       form.reset()
-        router.refresh()
+        toast.success(mode === "add" ? "Event Added" : "Event Updated", {
+          duration: 4000,
+        });
+        form.reset();
+        router.refresh();
       } else {
         const errorMessage = await res.text();
 
@@ -88,10 +106,10 @@ const AddEvent = () => {
   return (
     <div className=" bg-white p-4 rounded-md shadow-md dark:bg-black">
       <h2 className="text-2xl text-center font-bold tracking-tight">
-        Add an Event
+        {mode === "add" ? "Add an Event" : "Update an Event"}
       </h2>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit) } className="space-y-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
             name="title"
@@ -164,11 +182,11 @@ const AddEvent = () => {
             )}
           />
 
-          <Button type="submit">Submit</Button>
+          <Button type="submit">{mode === "add" ? "Submit" : "Update"}</Button>
         </form>
       </Form>
     </div>
   );
 };
 
-export default AddEvent;
+export default EventForm;

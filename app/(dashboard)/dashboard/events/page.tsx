@@ -1,5 +1,5 @@
 import Container from "@/components/Common/Container";
-import AddEvent from "./AddEvent";
+import EventForm from "./EventForm";
 import EventsTable from "./EventsTable";
 import { getEventsData } from "@/lib/data/getEventData";
 
@@ -15,7 +15,7 @@ const Settings = async () => {
           </h2>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
-          <AddEvent />
+          <EventForm mode="add" />
           <div className="col-span-2">
             <EventsTable events={Events} />
           </div>
