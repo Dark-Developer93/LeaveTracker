@@ -18,15 +18,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -47,12 +46,6 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-enum Role {
-  USER
-  ADMIN
-  MODERATOR
-}
-
 model User {
   id            String     @id @default(cuid())
   name          String?
@@ -65,23 +58,16 @@ model User {
   manager       String?
   department    String?
   accounts      Account[]
-  sessions      Session[]
   balances      Balances[]
+  sessions      Session[]
 }
 
 model LeaveType {
   id          String   @id @default(cuid())
   title       String
   values      String[] @default(["Credit", "Used", "Available"])
-  category    String // Should be a lower case of the title 
+  category    String
   description String?
-}
-
-enum LeaveStatus {
-  PENDING
-  APPROVED
-  INMODERATION
-  REJECTED
 }
 
 model Leave {
@@ -135,4 +121,17 @@ model Events {
   description String?
   startDate   DateTime
   endDate     DateTime?
+}
+
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  INMODERATION
+  REJECTED
 }
