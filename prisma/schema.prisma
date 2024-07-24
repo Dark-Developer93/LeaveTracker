@@ -5,18 +5,9 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// for the local development
-// datasource db {
-//   provider = "postgresql"
-//   url      = env("DATABASE_URL")
-// }
-
-// For neon database.
-
-// prisma/schema.prisma
 datasource db {
   provider  = "postgresql"
-  url  	    = env("DATABASE_URL")
+  url       = env("DATABASE_URL")
   // uncomment next line if you use Prisma <5.10
   directUrl = env("DATABASE_URL_UNPOOLED")
 }
@@ -73,7 +64,7 @@ model User {
   title         String?
   manager       String?
   department    String?
-  accounts      Account[] 
+  accounts      Account[]
   sessions      Session[]
   balances      Balances[]
 }
@@ -96,7 +87,7 @@ enum LeaveStatus {
 model Leave {
   id            String      @id @default(cuid())
   type          String
-  year          String @default("")
+  year          String      @default("")
   startDate     DateTime
   endDate       DateTime
   days          Int
@@ -105,8 +96,8 @@ model Leave {
   tasksLink     String?
   userEmail     String
   status        LeaveStatus @default(PENDING)
-  moderator     String?      
-  moderatorNote String?     
+  moderator     String?
+  moderatorNote String?
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @default(now())
 }
@@ -117,8 +108,8 @@ model Balances {
   annualCredit       Int?   @default(0)
   annualUsed         Int?   @default(0)
   annualAvailable    Int?   @default(0)
-  sickCredit         Int? @default(0)
-  sickUsed           Int? @default(0)
+  sickCredit         Int?   @default(0)
+  sickUsed           Int?   @default(0)
   sickAvailable      Int?   @default(0)
   studyCredit        Int?   @default(0)
   studyUsed          Int?   @default(0)
@@ -139,7 +130,7 @@ model Balances {
 }
 
 model Events {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   title       String
   description String?
   startDate   DateTime
