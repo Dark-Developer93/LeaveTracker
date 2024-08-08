@@ -40,14 +40,12 @@ const DialogWrapper = ({
   hasCloseBtn,
   onClick,
 }: DialogProps) => {
-
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (onClick) {
       event.stopPropagation(); // Stop propagation only if onClick is provided
       onClick(event);
     }
- };
-
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -55,11 +53,19 @@ const DialogWrapper = ({
         {isBtn ? (
           <Button className="text-white">{btnTitle}</Button>
         ) : isLink ? (
-          <Button variant="link" className="p-0 m-0 h-5 text-secondary-foreground font-normal">
+          <Button
+            variant="link"
+            className="p-0 m-0 h-5 text-secondary-foreground font-normal"
+          >
             {linkTitle}
           </Button>
         ) : (
-          Icon && <Icon className=" text-blue-600 cursor-pointer" size={24} />
+          Icon && (
+            <Icon
+              className=" text-primary cursor-pointer hover:text-primary/50 dark:hover:text-primary"
+              size={24}
+            />
+          )
         )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

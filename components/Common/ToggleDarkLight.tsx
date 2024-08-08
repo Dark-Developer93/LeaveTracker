@@ -21,14 +21,14 @@ const ToggleDarkLight = () => {
       {currentTheme === "dark" ? (
         <button
           onClick={() => setTheme("light")}
-          className="p-1 bg-slate-600 text-white rounded-full "
+          className="p-1 bg-primary text-white rounded-full "
         >
           <HiOutlineSun size={24} />
         </button>
       ) : (
         <button
           onClick={() => setTheme("dark")}
-          className="p-1 bg-blue-600 text-white rounded-full "
+          className="p-1 bg-primary text-white rounded-full "
         >
           <MdOutlineNightlightRound size={24} />
         </button>

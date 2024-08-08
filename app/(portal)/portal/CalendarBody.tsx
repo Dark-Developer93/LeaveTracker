@@ -26,26 +26,31 @@ const CalendarBody = ({ today, events }: CalendarBodyProps) => {
         })}
       </div>
       <div className="grid grid-cols-7">
-         {getDays(today.month(), today.year()).map(({ date, currentMonth, today }, index) => {
-           const event = events?.find(event => dayjs(event.startDate).isSame(date, 'day'));
-           return (
-             <div key={index} className="h-10 grid place-content-center">
-              {!event ?
-                <h1 
-                  className={cn(
-                    !currentMonth && "text-slate-400",
-                    today && "bg-blue-600 text-white ",
-                    "h-8 w-8 p-1 grid place-content-center font rounded-full cursor-pointer hover:bg-black hover:text-white dark:hover:bg-slate-500"
-                  )}
-                >
-                  {date.date()}{" "}
-                </h1>
-                : <EventPopOver event={event as Events} date={date.date()} />}
-              
-             </div>
-           );
-         })}
-       </div>
+        {getDays(today.month(), today.year()).map(
+          ({ date, currentMonth, today }, index) => {
+            const event = events?.find((event) =>
+              dayjs(event.startDate).isSame(date, "day")
+            );
+            return (
+              <div key={index} className="h-10 grid place-content-center">
+                {!event ? (
+                  <h1
+                    className={cn(
+                      !currentMonth && "text-slate-400",
+                      today && "bg-primary text-white ",
+                      "h-8 w-8 p-1 grid place-content-center font rounded-full cursor-pointer hover:bg-primary/25 hover:text-white dark:hover:bg-primary"
+                    )}
+                  >
+                    {date.date()}{" "}
+                  </h1>
+                ) : (
+                  <EventPopOver event={event as Events} date={date.date()} />
+                )}
+              </div>
+            );
+          }
+        )}
+      </div>
     </section>
   );
 };

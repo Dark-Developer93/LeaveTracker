@@ -19,7 +19,7 @@ export function RenderIconsRoutes({ routes }: Props) {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <button className=" bg-slate-50 p-2 text-slate-500 rounded-md dark:bg-black">
+                <button className="p-2 text-primary hover:bg-primary/25 rounded-md dark:primary/50 dark:hover:bg-primary/25">
                   {React.createElement(route.icon, {
                     size: 24,
                   })}

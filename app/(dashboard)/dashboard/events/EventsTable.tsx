@@ -52,7 +52,7 @@ const EventsTable = ({ events }: UserProps) => {
 
   const deleteEventHandler = async (eventId: string) => {
     try {
-      const response = await fetch('/api/events/eventId', {
+      const response = await fetch("/api/events/eventId", {
         method: "DELETE",
       });
       if (!response.ok) {
@@ -104,7 +104,7 @@ const EventsTable = ({ events }: UserProps) => {
                       {/* TODO: when you click it delete the event */}
                       <FaRegTrashCan
                         size={18}
-                        color="#2563eb"
+                        className="text-primary hover:cursor-pointer hover:text-primary/50 dark:hover:text-primary"
                         onClick={() => {
                           deleteEventHandler(event.id);
                           console.log(event.id);

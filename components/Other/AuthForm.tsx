@@ -48,7 +48,7 @@ export const AuthForm = (): JSX.Element => {
             }
           >
             <Icons.google className="mr-2 h-4 w-4" />
-            Google
+            Login with Google
           </Button>
         ))
       )}

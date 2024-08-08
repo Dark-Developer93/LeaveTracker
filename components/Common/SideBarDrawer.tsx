@@ -26,7 +26,7 @@ const SideBarDrawer = ({ user }: SideBarDrawerProps) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <button className="p-2 bg-blue-100 rounded-full text-blue-500">
+        <button className="p-2 bg-primary/50 rounded-full text-primary hover:bg-primary/25">
           {" "}
           <TiThMenu size={24} />{" "}
         </button>

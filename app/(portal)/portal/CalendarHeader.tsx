@@ -21,7 +21,7 @@ const CalendarHeader = ({
   currentDate,
 }: CalendarHeaderProps) => {
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-center bg-blue-100 py-5 px-10 rounded-t-md  dark:bg-slate-900">
+    <div className="flex flex-col sm:flex-row justify-between items-center bg-primary/50 py-5 px-10 rounded-t-md  dark:bg-primary/50">
       <h1 className="select-none font-semibold">
         {months[today.month()]}, {today.year()}
       </h1>
