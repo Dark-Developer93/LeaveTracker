@@ -27,7 +27,7 @@ export const AuthForm = (): JSX.Element => {
         </div>
         <div className="relative flex justify-center text-xs-uppercase">
           <span className="bg-background px-2 text-muted-foreground">
-            Continue with
+            Login
           </span>
         </div>
       </div>
@@ -48,7 +48,7 @@ export const AuthForm = (): JSX.Element => {
             }
           >
             <Icons.google className="mr-2 h-4 w-4" />
-            Login with Google
+            Google
           </Button>
         ))
       )}
