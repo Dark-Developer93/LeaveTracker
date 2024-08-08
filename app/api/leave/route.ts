@@ -1,6 +1,7 @@
 import { getCurrentUser } from "@/lib/session";
 import { differenceInDays, parseISO } from "date-fns";
 import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
 type SubmittedLeave = {
   notes: string;

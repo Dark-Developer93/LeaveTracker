@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { Role } from "@prisma/client";
 import { getCurrentUser } from "@/lib/session";
-
+import prisma from "@/lib/prisma";
 
 interface EditBody {
   [key: string]: number | string;

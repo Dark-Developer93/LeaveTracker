@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { Role } from "@prisma/client";
 import { getCurrentUser } from "@/lib/session";
+import prisma from "@/lib/prisma";
 
 interface EventBody {
   [key: string]: number | string;
@@ -20,10 +21,9 @@ export async function PATCH(req: Request) {
     const { id, ...data } = event;
 
     await prisma.events.update({
-        where: { id },
-        data,
-      });
-
+      where: { id },
+      data,
+    });
 
     return NextResponse.json(
       { message: "Event updated/deleted successfully" },
@@ -38,10 +38,8 @@ export async function PATCH(req: Request) {
   }
 }
 
-
 export async function DELETE(req: Request) {
-
-    const loggedInUser = await getCurrentUser();
+  const loggedInUser = await getCurrentUser();
   if (allowedRoles.includes(loggedInUser?.role as Role)) {
     throw new Error("You are not permitted to perform this action");
   }
@@ -51,8 +49,8 @@ export async function DELETE(req: Request) {
     const { id } = event;
 
     await prisma.events.delete({
-      where: { id }
-    })
+      where: { id },
+    });
 
     return NextResponse.json(
       { message: "Event deleted successfully" },
@@ -66,4 +64,3 @@ export async function DELETE(req: Request) {
     );
   }
 }
-
