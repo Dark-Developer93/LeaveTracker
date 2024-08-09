@@ -56,33 +56,34 @@ const EditBalances = ({ balance }: Props) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const router = useRouter();
 
-  const handleInputChange = (type: string) => (e: FormEvent<HTMLInputElement>) => {
-    // Dispatch the change for the current field
-    dispatch({
-       type,
-       value: e.currentTarget.valueAsNumber,
-    });
-   
-    // TODO: There is a bug when the below code is running that make the available values to be either extra by one or less by one
+  const handleInputChange =
+    (type: string) => (e: FormEvent<HTMLInputElement>) => {
+      // Dispatch the change for the current field
+      dispatch({
+        type,
+        value: e.currentTarget.valueAsNumber,
+      });
 
-    // // Recalculate available values if the type is Credit or Used
-    // if (type.endsWith("Credit") || type.endsWith("Used")) {
-    //    const baseType = type.replace(/Credit|Used/, "");
-    //    const creditKey = `${baseType}Credit`;
-    //    const usedKey = `${baseType}Used`;
-    //    const availableKey = `${baseType}Available`;
-   
-    //    const credit = state[creditKey] || 0;
-    //    const used = state[usedKey] || 0;
-    //    const available = credit - used;
-   
-    //    // Dispatch the change for the available field
-    //    dispatch({
-    //      type: availableKey,
-    //      value: available,
-    //    });
-    // }
-   };
+      // TODO: There is a bug when the below code is running that make the available values to be either extra by one or less by one
+
+      // // Recalculate available values if the type is Credit or Used
+      // if (type.endsWith("Credit") || type.endsWith("Used")) {
+      //    const baseType = type.replace(/Credit|Used/, "");
+      //    const creditKey = `${baseType}Credit`;
+      //    const usedKey = `${baseType}Used`;
+      //    const availableKey = `${baseType}Available`;
+
+      //    const credit = state[creditKey] || 0;
+      //    const used = state[usedKey] || 0;
+      //    const available = credit - used;
+
+      //    // Dispatch the change for the available field
+      //    dispatch({
+      //      type: availableKey,
+      //      value: available,
+      //    });
+      // }
+    };
 
   async function submitEditedBal(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -109,7 +110,7 @@ const EditBalances = ({ balance }: Props) => {
       }
     } catch (error) {
       console.error("An error occurred:", error);
-      toast.error("An Unexpected error occured");
+      toast.error(`An Unexpected error occured ${error}`);
     }
   }
 
@@ -132,7 +133,7 @@ const EditBalances = ({ balance }: Props) => {
                   type="number"
                   onChange={handleInputChange(key)}
                   value={state[key]}
-                //   disabled={isAvailable} // Disable available inputs
+                  //   disabled={isAvailable} // Disable available inputs
                 />
               </div>
             );
