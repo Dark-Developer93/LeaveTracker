@@ -17,7 +17,7 @@ import { Badge } from "@/components/ui/badge";
 type BalanceRowType = {
   title: string;
   values: string[];
-}
+};
 
 const BalanceRow = ({ title, values }: BalanceRowType) => (
   <TableHead className="text-center border-none">
@@ -33,12 +33,10 @@ const BalanceRow = ({ title, values }: BalanceRowType) => (
 );
 
 type BalanceProps = {
-  balances: Balances[]
-}
+  balances: Balances[];
+};
 
-const BalancesTable = ({balances}: BalanceProps) => {
-
-
+const BalancesTable = ({ balances }: BalanceProps) => {
   const balanceCategories = [
     { title: "ANNUAL", values: ["Credit", "Used", "Available"] },
     { title: "FAMILY", values: ["Credit", "Used", "Available"] },
@@ -50,7 +48,7 @@ const BalancesTable = ({balances}: BalanceProps) => {
   ];
 
   const renderTableCells = (bal: CellTypes) => {
-    const categories = [ 
+    const categories = [
       "annual",
       "family",
       "sick",
@@ -94,10 +92,12 @@ const BalancesTable = ({balances}: BalanceProps) => {
           {balances?.map((bal) => (
             <TableRow key={bal.id}>
               <TableCell>
-                <EditBalances balance={bal}/>
+                <EditBalances balance={bal} />
               </TableCell>
               <TableCell>{bal.name}</TableCell>
-              <TableCell><Badge>{bal.year} </Badge> </TableCell>
+              <TableCell>
+                <Badge>{bal.year} </Badge>{" "}
+              </TableCell>
               {renderTableCells(bal)}
             </TableRow>
           ))}

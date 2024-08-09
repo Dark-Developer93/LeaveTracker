@@ -41,8 +41,8 @@ const AuthComponent = (): JSX.Element => {
         <Image
           src="/RemoteCoders-logo_RGB-2048x505.png.webp"
           alt="Image"
-          width={250}
-          height={250}
+          width={500}
+          height={500}
           className="h-full w-full object-scale-down dark:brightness-[0.2] dark:grayscale"
         />
       </div>

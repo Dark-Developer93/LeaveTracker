@@ -38,13 +38,13 @@ import DialogWrapper from "@/components/Common/DialogWrapper";
 import { User } from "@prisma/client";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import submitLeave from "../../actions/submitLeave";
 
 type Props = {
   user: User;
 };
 
 const RequestForm = ({ user }: Props) => {
-  
   const [open, setOpen] = useState(false);
 
   const formSchema = z.object({
@@ -66,7 +66,7 @@ const RequestForm = ({ user }: Props) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       notes: "",
-    }, 
+    },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -75,23 +75,19 @@ const RequestForm = ({ user }: Props) => {
         ...values,
         startDate: values.startDate.toISOString(),
         endDate: values.endDate.toISOString(),
-        user,
+        user: {
+          ...user,
+          email: user.email as string,
+          image: user.image as string,
+          name: user.name as string,
+        },
       };
 
-      const res = await fetch("/api/leave", {
-        method: "POST",
-        body: JSON.stringify(formattedValues),
-      });
+      await submitLeave(formattedValues);
 
-      if (res.ok) {
-        toast.success("Leave Submitted", { duration: 4000 });
-        setOpen(false)
-        form.reset()
-      } else {
-        const errorMessage = await res.text();
-
-        toast.error(`An error occured ${errorMessage}`, { duration: 6000 });
-      }
+      toast.success("Leave Submitted", { duration: 4000 });
+      setOpen(false);
+      form.reset();
     } catch (error) {
       console.error("An error occurred:", error);
       toast.error("An Unexpected error occured");
@@ -199,9 +195,11 @@ const RequestForm = ({ user }: Props) => {
                       selected={field.value}
                       onSelect={field.onChange}
                       // This function in disabled is to make sure we get to set the leave to be of this year only based on this year start date
-                      disabled={(date: Date) =>{  const today = new Date();
+                      disabled={(date: Date) => {
+                        const today = new Date();
                         const currentYear = today.getFullYear();
-                        return date < today || date.getFullYear() > currentYear;}}
+                        return date < today || date.getFullYear() > currentYear;
+                      }}
                       initialFocus
                     />
                   </PopoverContent>
@@ -269,7 +267,6 @@ const RequestForm = ({ user }: Props) => {
           />
 
           <Button type="submit">Submit</Button>
-          
         </form>
       </Form>
     </DialogWrapper>

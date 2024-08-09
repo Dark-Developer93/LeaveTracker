@@ -1,7 +1,9 @@
+import dynamic from "next/dynamic";
 import Container from "@/components/Common/Container";
-import BalancesTable from "./BalancesTable";
 import { getAllBalances } from "@/lib/data/getBalanceData";
 import { Balances } from "@prisma/client";
+
+const BalancesTable = dynamic(() => import("./BalancesTable"), { ssr: false });
 
 const AdminBalances = async () => {
   const allBalances = await getAllBalances();

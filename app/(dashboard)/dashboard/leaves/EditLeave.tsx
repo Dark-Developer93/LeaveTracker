@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import DialogWrapper from "@/components/Common/DialogWrapper";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,8 +34,8 @@ import { BsCheckLg } from "react-icons/bs";
 import { leaveStatus } from "@/lib/data/dummy-data";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { LeaveStatus } from "@prisma/client";
+import { updateLeave } from "../../../actions/leaveActions";
 
 type EditLeaveProps = {
   id: string;
@@ -72,10 +73,9 @@ const EditLeave = ({
 
   async function editLeave(values: z.infer<typeof formSchema>) {
     try {
-      const formValues = {
+      const formData = new FormData();
+      Object.entries({
         ...values,
-        notes: values.notes,
-        status: values.status,
         id,
         days,
         type,
@@ -83,25 +83,17 @@ const EditLeave = ({
         email,
         user,
         startDate,
-      };
-
-      const res = await fetch("/api/leave/leaveId", {
-        method: "PATCH",
-        body: JSON.stringify(formValues),
+      }).forEach(([key, value]) => {
+        formData.append(key, value.toString());
       });
 
-      if (res.ok) {
-        toast.success("Leave updated successfully", { duration: 4000 });
-        setOpen(false);
-        router.refresh();
-      } else {
-        const errorMessage = await res.text();
-
-        toast.error(`An error occured ${errorMessage}`, { duration: 6000 });
-      }
+      await updateLeave(formData);
+      toast.success("Leave updated successfully", { duration: 4000 });
+      setOpen(false);
+      router.refresh();
     } catch (error) {
       console.error("An error occurred:", error);
-      toast.error(`An Unexpected error occured: ${error}`);
+      toast.error(`An Unexpected error occurred: ${error}`);
     }
   }
   return (
@@ -145,11 +137,11 @@ const EditLeave = ({
                       <CommandInput placeholder="Search a status..." />
                       <CommandEmpty>No leave type found.</CommandEmpty>
                       <CommandGroup>
-                        {leaveStatus.map((status: LeaveStatus,i: any) => (
+                        {leaveStatus.map((status: LeaveStatus, i: any) => (
                           <CommandItem
                             value={status}
                             // create a good key
-                            key = {i}
+                            key={i}
                             onSelect={() => {
                               form.setValue("status", status);
                             }}
@@ -172,7 +164,7 @@ const EditLeave = ({
               </FormItem>
             )}
           />
-       <FormField
+          <FormField
             control={form.control}
             name="notes"
             render={({ field }) => (
