@@ -16,6 +16,11 @@ type SubmittedCredits = {
   name: string;
 };
 
+interface EditBody {
+  [key: string]: number | string;
+  id: string;
+}
+
 const allowedRoles = ["ADMIN", "MODERATOR"];
 
 export async function addCredits(formData: FormData) {
@@ -60,6 +65,23 @@ export async function addCredits(formData: FormData) {
       maternityCredit: data.maternity,
       paternityCredit: data.paternity,
     },
+  });
+
+  return { message: "Success" };
+}
+
+export async function updateBalance(formData: FormData) {
+  const loggedInUser = await getCurrentUser();
+  if (!allowedRoles.includes(loggedInUser?.role as Role)) {
+    throw new Error("You are not permitted to perform this action");
+  }
+
+  const id = formData.get("id") as string;
+  const { ...data } = Object.fromEntries(formData);
+
+  await prisma.balances.update({
+    where: { id },
+    data,
   });
 
   return { message: "Success" };

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Balances } from "@prisma/client";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { updateBalance } from "@/app/actions/balanceActions";
 
 type State = {
   [key: string]: number;
@@ -89,25 +90,18 @@ const EditBalances = ({ balance }: Props) => {
     e.preventDefault();
     try {
       const id = balance.id;
-      const formattedValues = {
+      const formData = new FormData();
+      Object.entries({
         ...state,
         id,
-      };
-
-      const res = await fetch("/api/balance/balanceId", {
-        method: "PATCH",
-        body: JSON.stringify(formattedValues),
+      }).forEach(([key, value]) => {
+        formData.append(key, value.toString());
       });
 
-      if (res.ok) {
-        toast.success("Edit Successful", { duration: 4000 });
-        setOpen(false);
-        router.refresh();
-      } else {
-        const errorMessage = await res.text();
-
-        toast.error(`An error occured ${errorMessage}`, { duration: 6000 });
-      }
+      await updateBalance(formData);
+      toast.success("Edit Successful", { duration: 4000 });
+      setOpen(false);
+      router.refresh();
     } catch (error) {
       console.error("An error occurred:", error);
       toast.error(`An Unexpected error occured ${error}`);
