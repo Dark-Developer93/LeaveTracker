@@ -90,7 +90,7 @@ const EditUser = ({ user }: EditUserProps) => {
       }
     } catch (error) {
       console.error("An error occurred:", error);
-      toast.error("An Unexpected error occured");
+      toast.error(`An Unexpected error occured ${error}`);
     }
   }
 
