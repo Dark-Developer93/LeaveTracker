@@ -35,7 +35,7 @@ import { leaveStatus } from "@/lib/data/dummy-data";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { LeaveStatus } from "@prisma/client";
-import { updateLeave } from "../../../actions/leaveActions";
+import { updateLeave } from "@/app/actions/leaveActions";
 
 type EditLeaveProps = {
   id: string;

@@ -34,11 +34,10 @@ import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import DialogWrapper from "@/components/Common/DialogWrapper";
-// import { toast } from "@/components/ui/use-toast";
 import { User } from "@prisma/client";
 import toast from "react-hot-toast";
 import { useState } from "react";
-import submitLeave from "../../actions/submitLeave";
+import { submitLeave } from "@/app/actions/leaveActions";
 
 type Props = {
   user: User;
