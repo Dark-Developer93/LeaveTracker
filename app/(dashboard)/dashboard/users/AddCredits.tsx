@@ -1,12 +1,15 @@
 "use client";
 
-import DialogWrapper from "@/components/Common/DialogWrapper";
-import { FaPlus } from "react-icons/fa6";
-import CreditField from "./CreditField";
 import { FormEvent, useState } from "react";
-import { Button } from "@/components/ui/button";
-import toast from "react-hot-toast";
+
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { FaPlus } from "react-icons/fa6";
+
+import DialogWrapper from "@/components/Common/DialogWrapper";
+import CreditField from "./CreditField";
+import { Button } from "@/components/ui/button";
+import { addCredits } from "@/app/actions/balanceActions";
 
 const creditTypes = [
   "annual",
@@ -44,31 +47,23 @@ const AddCredits = ({ email, name }: Props) => {
     e.preventDefault();
     try {
       const year = new Date().getFullYear().toString();
-
-      const formattedValues = {
+      const formData = new FormData();
+      Object.entries({
         ...creditValues,
         year,
         email,
         name,
-      };
-
-      const res = await fetch("/api/balance", {
-        method: "POST",
-        body: JSON.stringify(formattedValues),
+      }).forEach(([key, value]) => {
+        formData.append(key, value.toString());
       });
 
-      if (res.ok) {
-        toast.success("Credits Submitted", { duration: 4000 });
-        setOpen(false);
-        router.refresh();
-      } else {
-        const errorMessage = await res.text();
-
-        toast.error(`An error occured ${errorMessage}`, { duration: 6000 });
-      }
+      await addCredits(formData);
+      toast.success("Credits Submitted", { duration: 4000 });
+      setOpen(false);
+      router.refresh();
     } catch (error) {
       console.error("An error occurred:", error);
-      toast.error("An Unexpected error occured");
+      toast.error(`An Unexpected error occurred ${error}`);
     }
   }
 
