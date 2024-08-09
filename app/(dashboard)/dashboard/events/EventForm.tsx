@@ -99,7 +99,7 @@ const EventForm = ({ mode, initialState }: EventFormProps) => {
       }
     } catch (error) {
       console.error("An error occurred:", error);
-      toast.error(`An Unexpected error occured ${error}`);
+      toast.error(`An error occurred: ${error}`);
     }
   }
 
