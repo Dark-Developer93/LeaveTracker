@@ -77,7 +77,7 @@ export async function updateBalance(formData: FormData) {
   }
 
   const id = formData.get("id") as string;
-  const { ...data } = Object.fromEntries(formData);
+  const { id: _id, ...data } = Object.fromEntries(formData);
 
   await prisma.balances.update({
     where: { id },
