@@ -61,31 +61,34 @@ const EditBalances = ({ balance }: Props) => {
 
   const handleInputChange =
     (type: string) => (e: FormEvent<HTMLInputElement>) => {
+      const newValue = e.currentTarget.valueAsNumber;
       // Dispatch the change for the current field
       dispatch({
         type,
-        value: e.currentTarget.valueAsNumber,
+        value: newValue,
       });
 
       // TODO: There is a bug when the below code is running that make the available values to be either extra by one or less by one
 
       // // Recalculate available values if the type is Credit or Used
-      // if (type.endsWith("Credit") || type.endsWith("Used")) {
-      //    const baseType = type.replace(/Credit|Used/, "");
-      //    const creditKey = `${baseType}Credit`;
-      //    const usedKey = `${baseType}Used`;
-      //    const availableKey = `${baseType}Available`;
+      if (type.endsWith("Credit") || type.endsWith("Used")) {
+        const baseType = type.replace(/Credit|Used/, "");
+        const creditKey = `${baseType}Credit`;
+        const usedKey = `${baseType}Used`;
+        const availableKey = `${baseType}Available`;
 
-      //    const credit = state[creditKey] || 0;
-      //    const used = state[usedKey] || 0;
-      //    const available = credit - used;
+        const credit = type.endsWith("Credit")
+          ? newValue
+          : state[creditKey] || 0;
+        const used = type.endsWith("Used") ? newValue : state[usedKey] || 0;
+        const available = credit - used;
 
-      //    // Dispatch the change for the available field
-      //    dispatch({
-      //      type: availableKey,
-      //      value: available,
-      //    });
-      // }
+        // Dispatch the change for the available field
+        dispatch({
+          type: availableKey,
+          value: available,
+        });
+      }
     };
 
   async function submitEditedBal(e: FormEvent<HTMLFormElement>) {
@@ -121,7 +124,7 @@ const EditBalances = ({ balance }: Props) => {
       <form onSubmit={submitEditedBal}>
         <div className="grid grid-cols-3 gap-2 my-3">
           {Object.keys(initialState).map((key) => {
-            // const isAvailable = key.endsWith("Available");
+            const isAvailable = key.endsWith("Available");
             return (
               <div className="flex flex-col" key={key}>
                 <Label className="text-xs">{key}</Label>
@@ -129,7 +132,7 @@ const EditBalances = ({ balance }: Props) => {
                   type="number"
                   onChange={handleInputChange(key)}
                   value={state[key]}
-                  //   disabled={isAvailable} // Disable available inputs
+                  disabled={isAvailable} // Disable available inputs
                 />
               </div>
             );
