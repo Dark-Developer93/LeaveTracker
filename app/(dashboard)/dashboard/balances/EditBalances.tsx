@@ -1,15 +1,17 @@
 "use client";
 
-import DialogWrapper from "@/components/Common/DialogWrapper";
 import { FormEvent, useReducer, useState } from "react";
-import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+
+import toast from "react-hot-toast";
 import { IoPencil } from "react-icons/io5";
-import { Button } from "@/components/ui/button";
+
 import { Balances } from "@prisma/client";
+import { updateBalance } from "@/app/actions/balanceActions";
+import DialogWrapper from "@/components/Common/DialogWrapper";
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { updateBalance } from "@/app/actions/balanceActions";
 
 type State = {
   [key: string]: number;
