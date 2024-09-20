@@ -98,7 +98,7 @@ const RequestForm = ({ user }: Props) => {
       btnTitle="Apply for Leave"
       title="Submit your Leave Application"
       description="Make sure you select the right type and dates for your leave."
-      isBtn={true}
+      isBtn
       open={open}
       setOpen={() => setOpen(!open)}
     >
@@ -118,12 +118,12 @@ const RequestForm = ({ user }: Props) => {
                         role="combobox"
                         className={cn(
                           " justify-between",
-                          !field.value && "text-muted-foreground"
+                          !field.value && "text-muted-foreground",
                         )}
                       >
                         {field.value
                           ? leaveTypes.find(
-                              (leave) => leave.value === field.value
+                              (leave) => leave.value === field.value,
                             )?.label
                           : "Select a leave"}
                         <PiCaretUpDownBold className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -148,7 +148,7 @@ const RequestForm = ({ user }: Props) => {
                                 "mr-2 h-4 w-4",
                                 leave.value === field.value
                                   ? "opacity-100"
-                                  : "opacity-0"
+                                  : "opacity-0",
                               )}
                             />
                             {leave.label}
@@ -173,10 +173,10 @@ const RequestForm = ({ user }: Props) => {
                   <PopoverTrigger asChild>
                     <FormControl>
                       <Button
-                        variant={"outline"}
+                        variant="outline"
                         className={cn(
                           "  inline-flex justify-between",
-                          !field.value && "text-muted-foreground"
+                          !field.value && "text-muted-foreground",
                         )}
                       >
                         {field.value ? (
@@ -218,10 +218,10 @@ const RequestForm = ({ user }: Props) => {
                   <PopoverTrigger asChild>
                     <FormControl>
                       <Button
-                        variant={"outline"}
+                        variant="outline"
                         className={cn(
                           "  inline-flex justify-between",
-                          !field.value && "text-muted-foreground"
+                          !field.value && "text-muted-foreground",
                         )}
                       >
                         {field.value ? (

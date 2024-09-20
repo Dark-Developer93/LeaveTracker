@@ -29,7 +29,7 @@ const CalendarBody = ({ today, events }: CalendarBodyProps) => {
         {getDays(today.month(), today.year()).map(
           ({ date, currentMonth, today }, index) => {
             const event = events?.find((event) =>
-              dayjs(event.startDate).isSame(date, "day")
+              dayjs(event.startDate).isSame(date, "day"),
             );
             return (
               <div key={index} className="h-10 grid place-content-center">
@@ -38,7 +38,7 @@ const CalendarBody = ({ today, events }: CalendarBodyProps) => {
                     className={cn(
                       !currentMonth && "text-slate-400",
                       today && "bg-primary text-white ",
-                      "h-8 w-8 p-1 grid place-content-center font rounded-full cursor-pointer hover:bg-primary/25 hover:text-white dark:hover:bg-primary"
+                      "h-8 w-8 p-1 grid place-content-center font rounded-full cursor-pointer hover:bg-primary/25 hover:text-white dark:hover:bg-primary",
                     )}
                   >
                     {date.date()}{" "}
@@ -48,7 +48,7 @@ const CalendarBody = ({ today, events }: CalendarBodyProps) => {
                 )}
               </div>
             );
-          }
+          },
         )}
       </div>
     </section>
