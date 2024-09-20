@@ -41,14 +41,15 @@ const CalendarHeader = ({
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        <h1
-          className=" cursor-pointer hover:scale-105 transition-all"
+        <button
+          type="button"
+          className="cursor-pointer hover:scale-105 transition-all text-xl font-semibold"
           onClick={() => {
             setToday(currentDate);
           }}
         >
           Today
-        </h1>
+        </button>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>

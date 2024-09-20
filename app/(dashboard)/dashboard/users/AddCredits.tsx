@@ -62,7 +62,6 @@ const AddCredits = ({ email, name }: Props) => {
       setOpen(false);
       router.refresh();
     } catch (error) {
-      console.error("An error occurred:", error);
       toast.error(`An Unexpected error occurred ${error}`);
     }
   }

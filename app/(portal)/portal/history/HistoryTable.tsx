@@ -32,40 +32,39 @@ const HistoryTable = ({ history }: HistoryProps) => {
         </TableRow>
       </TableHeader>
       <TableBody className="whitespace-nowrap">
-        {history.map((history) => (
-          <TableRow key={history.id}>
-            <TableCell className="font-medium">{history.type}</TableCell>
+        {history.map((leave) => (
+          <TableRow key={leave.id}>
+            <TableCell className="font-medium">{leave.type}</TableCell>
             <TableCell className="font-medium">
-              {dayjs(history.createdAt).format()}
+              {dayjs(leave.createdAt).format()}
             </TableCell>
             <TableCell className="flex items-center">
-              <span>{dayjs(history.startDate).format("DD/MM/YYYY")} </span> -{" "}
-              <span>{dayjs(history.endDate).format("DD/MM/YYYY")} </span>{" "}
+              <span>{dayjs(leave.startDate).format("DD/MM/YYYY")} </span> -{" "}
+              <span>{dayjs(leave.endDate).format("DD/MM/YYYY")} </span>{" "}
             </TableCell>
-            <TableCell>{history.days}</TableCell>
+            <TableCell>{leave.days}</TableCell>
             <TableCell className="">
               <Badge
                 className={cn(
-                  history.status === LeaveStatus.APPROVED && "bg-green-500",
-                  history.status === LeaveStatus.PENDING && "bg-amber-500",
-                  history.status === LeaveStatus.REJECTED && "bg-red-500",
-                  history.status === LeaveStatus.INMODERATION &&
-                    "bg-indigo-500",
+                  leave.status === LeaveStatus.APPROVED && "bg-green-500",
+                  leave.status === LeaveStatus.PENDING && "bg-amber-500",
+                  leave.status === LeaveStatus.REJECTED && "bg-red-500",
+                  leave.status === LeaveStatus.INMODERATION && "bg-indigo-500",
                 )}
               >
                 {" "}
-                {history.status}
+                {leave.status}
               </Badge>{" "}
             </TableCell>
             <TableCell className="">
               {formatDistance(
-                subDays(new Date(history.createdAt), 0),
+                subDays(new Date(leave.createdAt), 0),
                 new Date(),
                 { addSuffix: true },
               )}
             </TableCell>
-            <TableCell className="">{history.moderatorNote}</TableCell>
-            <TableCell className="text-right">{history.moderator}</TableCell>
+            <TableCell className="">{leave.moderatorNote}</TableCell>
+            <TableCell className="text-right">{leave.moderator}</TableCell>
           </TableRow>
         ))}
       </TableBody>

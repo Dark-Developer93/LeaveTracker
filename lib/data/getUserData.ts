@@ -17,7 +17,8 @@ export async function getAllUsers() {
     });
 
     return [...usersData];
-  } catch (error: any) {
+  } catch (error) {
+    // eslint-disable-next-line no-console
     console.error("Error fetching all users:", error);
     throw new Error("Error fetching all users");
   }

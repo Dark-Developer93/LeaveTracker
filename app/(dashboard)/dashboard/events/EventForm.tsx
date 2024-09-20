@@ -83,7 +83,6 @@ const EventForm = ({
       form.reset();
       router.refresh();
     } catch (error) {
-      console.error("An error occurred:", error);
       toast.error(`An error occurred: ${error}`);
     }
   };

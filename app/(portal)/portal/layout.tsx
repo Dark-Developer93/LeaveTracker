@@ -1,7 +1,7 @@
 import Header from "@/components/Common/Header";
 import SideBar from "@/components/Common/SideBar";
 import { getCurrentUser } from "@/lib/session";
-import { User } from ".prisma/client";
+import { User } from "@prisma/client";
 
 export default async function PortalLayout({
   children,

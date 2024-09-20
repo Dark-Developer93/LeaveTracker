@@ -88,7 +88,6 @@ const RequestForm = ({ user }: Props) => {
       setOpen(false);
       form.reset();
     } catch (error) {
-      console.error("An error occurred:", error);
       toast.error(`An error occurred: ${error}`);
     }
   }

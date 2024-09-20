@@ -10,8 +10,8 @@ type Props = {
 
 const CreditField = ({ label, name, onChange, value }: Props) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.valueAsNumber;
-    onChange(value);
+    const newValue = e.target.valueAsNumber;
+    onChange(newValue);
   };
   return (
     <div className="flex flex-col">

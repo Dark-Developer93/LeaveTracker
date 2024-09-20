@@ -6,6 +6,7 @@ import UsersTable from "./UsersTable";
 
 const AdminUsersPage = async () => {
   const users = await getAllUsers();
+
   return (
     <Container>
       <TableWrapper title="Users">

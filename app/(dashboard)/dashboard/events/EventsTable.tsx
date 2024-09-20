@@ -35,7 +35,6 @@ const EventsTable = ({ events }: UserProps) => {
       toast.success("Event deleted successfully", { duration: 4000 });
       router.refresh();
     } catch (error) {
-      console.error("Error deleting event:", error);
       toast.error(`An error occurred: ${error}`, { duration: 6000 });
     }
   };
@@ -65,7 +64,6 @@ const EventsTable = ({ events }: UserProps) => {
             </TableRow>
           </TableHeader>
           <TableBody className="whitespace-nowrap">
-            {/* if no events then show an h2 with the text "No events" */}
             {events.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={4} className="text-center">
@@ -78,11 +76,10 @@ const EventsTable = ({ events }: UserProps) => {
                   <TableCell className="font-medium">{event.title}</TableCell>
                   <TableCell>{event.description}</TableCell>
                   <TableCell>{event.startDate.toLocaleDateString()}</TableCell>
-                  {/* TODO: Check why the API for the Delete and the update is not working */}
                   <TableCell className="">
                     <ConfirmationDialog
                       triggerButton={
-                        <button>
+                        <button type="button">
                           <FaRegTrashCan
                             size={18}
                             className="text-primary hover:cursor-pointer hover:text-primary/50 dark:hover:text-primary"

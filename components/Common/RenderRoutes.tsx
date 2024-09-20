@@ -14,12 +14,15 @@ type Props = {
 export function RenderIconsRoutes({ routes }: Props) {
   return (
     <>
-      {routes.map((route, index) => (
-        <Link href={route.url} key={index} className="my-3 ">
+      {routes.map((route) => (
+        <Link href={route.url} key={route.title} className="my-3 ">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <button className="p-2 text-primary hover:bg-primary/25 rounded-md dark:primary/50 dark:hover:bg-primary/25">
+                <button
+                  type="button"
+                  className="p-2 text-primary hover:bg-primary/25 rounded-md dark:primary/50 dark:hover:bg-primary/25"
+                >
                   {React.createElement(route.icon, {
                     size: 24,
                   })}
@@ -39,8 +42,8 @@ export function RenderIconsRoutes({ routes }: Props) {
 export function RenderRoutes({ routes }: Props) {
   return (
     <>
-      {routes.map((route, index) => (
-        <Link href={route.url} key={index} className="my-4  rounded-md">
+      {routes.map((route) => (
+        <Link href={route.url} key={route.title} className="my-4  rounded-md">
           <div className="flex items-center justify-between ">
             <div className="px-3">
               {React.createElement(route.icon, {

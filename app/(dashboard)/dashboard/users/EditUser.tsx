@@ -87,7 +87,6 @@ const EditUser = ({ user }: EditUserProps) => {
       setOpen(false);
       router.refresh();
     } catch (error) {
-      console.error("An error occurred:", error);
       toast.error(`An error occurred: ${error}`);
     }
   }
@@ -265,10 +264,10 @@ const EditUser = ({ user }: EditUserProps) => {
                       <CommandInput placeholder="Search a role..." />
                       <CommandEmpty>No role found.</CommandEmpty>
                       <CommandGroup>
-                        {UserRoles.map((role, i) => (
+                        {UserRoles.map((role) => (
                           <CommandItem
                             value={role}
-                            key={i}
+                            key={role}
                             onSelect={() => {
                               form.setValue("role", role);
                             }}

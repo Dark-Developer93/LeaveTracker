@@ -26,9 +26,11 @@ const SideBarDrawer = ({ user }: SideBarDrawerProps) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <button className="p-2 bg-primary/50 rounded-full text-primary hover:bg-primary/25">
-          {" "}
-          <TiThMenu size={24} />{" "}
+        <button
+          type="button"
+          className="p-2 bg-primary/50 rounded-full text-primary hover:bg-primary/25"
+        >
+          <TiThMenu size={24} />
         </button>
       </SheetTrigger>
       <SheetContent side="left" className="flex flex-col justify-between w-52">
@@ -44,7 +46,7 @@ const SideBarDrawer = ({ user }: SideBarDrawerProps) => {
         </div>
         <div className="flex items-center justify-around">
           <ToggleDarkLight />
-          <button className=" text-slate-500 dark:text-slate-300">
+          <button type="button" className=" text-slate-500 dark:text-slate-300">
             <LogoutBtn />
           </button>
         </div>
