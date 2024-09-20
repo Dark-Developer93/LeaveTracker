@@ -1,10 +1,10 @@
 import Image from "next/image";
 import { TiThMenu } from "react-icons/ti";
+import { User } from "@prisma/client";
 import ToggleDarkLight from "./ToggleDarkLight";
 import { RenderRoutes } from "./RenderRoutes";
 import { AdminRoutes, ModeratorRoutes, UserRoutes } from "./Routes";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
-import { User } from "@prisma/client";
 import LogoutBtn from "./LogoutBtn";
 
 type SideBarDrawerProps = {
