@@ -100,7 +100,7 @@ const EditLeave = ({
     <DialogWrapper
       btnTitle="Edit"
       title="Edit Leave"
-      isBtn={true}
+      isBtn
       open={open}
       setOpen={() => setOpen(!open)}
     >
@@ -120,12 +120,12 @@ const EditLeave = ({
                         role="combobox"
                         className={cn(
                           "justify-between",
-                          !field.value && "text-muted-foreground"
+                          !field.value && "text-muted-foreground",
                         )}
                       >
                         {field.value
                           ? leaveStatus.find(
-                              (status: LeaveStatus) => status === field.value
+                              (status: LeaveStatus) => status === field.value,
                             )
                           : "Select a decision"}
                         <PiCaretUpDownBold className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -151,7 +151,7 @@ const EditLeave = ({
                                 "mr-2 h-4 w-4",
                                 status === field.value
                                   ? "opacity-100"
-                                  : "opacity-0"
+                                  : "opacity-0",
                               )}
                             />
                             {status}
