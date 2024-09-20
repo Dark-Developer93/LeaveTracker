@@ -138,7 +138,7 @@ const EditBalances = ({ balance }: Props) => {
 
   return (
     <DialogWrapper
-      title="Edit Credits"
+      title="Edit Balances"
       icon={IoPencil}
       isBtn={false}
       open={open}
