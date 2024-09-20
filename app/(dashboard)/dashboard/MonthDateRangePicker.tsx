@@ -32,10 +32,10 @@ export function MonthDateRangePicker() {
         <PopoverTrigger asChild>
           <Button
             id="date"
-            variant={"outline"}
+            variant="outline"
             className={cn(
               "w-[260px] justify-start text-left font-normal",
-              !date && "text-muted-foreground"
+              !date && "text-muted-foreground",
             )}
           >
             <IoCalendarOutline className="mr-2 h-4 w-4" />

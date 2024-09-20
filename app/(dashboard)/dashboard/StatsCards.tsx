@@ -55,7 +55,11 @@ const StatsCards = () => {
             <p className="text-xs text-muted-foreground">
               <span className="flex items-center">
                 {" "}
-                {stat.change > 0 ? <HiArrowNarrowUp className="text-green-600 " size={16}/> : <HiArrowNarrowDown className="text-red-600 " size={16}/>}{" "}
+                {stat.change > 0 ? (
+                  <HiArrowNarrowUp className="text-green-600 " size={16} />
+                ) : (
+                  <HiArrowNarrowDown className="text-red-600 " size={16} />
+                )}{" "}
                 {stat.change}{" "}
               </span>{" "}
               from last month
