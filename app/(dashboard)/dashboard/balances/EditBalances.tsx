@@ -12,6 +12,7 @@ import DialogWrapper from "@/components/Common/DialogWrapper";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { z } from "zod";
 
 type State = {
   [key: string]: number;
@@ -59,6 +60,28 @@ const EditBalances = ({ balance }: Props) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const router = useRouter();
 
+  const balancesFormSchema = z.object({
+    annualCredit: z.number(),
+    annualUsed: z.number(),
+    annualAvailable: z.number(),
+    familyCredit: z.number(),
+    familyUsed: z.number(),
+    familyAvailable: z.number(),
+    sickCredit: z.number(),
+    sickUsed: z.number(),
+    sickAvailable: z.number(),
+    maternityCredit: z.number(),
+    maternityUsed: z.number(),
+    maternityAvailable: z.number(),
+    paternityCredit: z.number(),
+    paternityUsed: z.number(),
+    paternityAvailable: z.number(),
+    studyCredit: z.number(),
+    studyUsed: z.number(),
+    studyAvailable: z.number(),
+    unpaidUsed: z.number(),
+  });
+
   const handleInputChange =
     (type: string) => (e: FormEvent<HTMLInputElement>) => {
       const newValue = e.currentTarget.valueAsNumber;
@@ -91,10 +114,10 @@ const EditBalances = ({ balance }: Props) => {
       }
     };
 
-  async function submitEditedBal(e: FormEvent<HTMLFormElement>) {
+  async function submitEditedBalances(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
-      const id = balance.id;
+      const { id } = balance;
       const formData = new FormData();
       Object.entries({
         ...state,
@@ -121,7 +144,7 @@ const EditBalances = ({ balance }: Props) => {
       open={open}
       setOpen={() => setOpen(!open)}
     >
-      <form onSubmit={submitEditedBal}>
+      <form onSubmit={submitEditedBalances}>
         <div className="grid grid-cols-3 gap-2 my-3">
           {Object.keys(initialState).map((key) => {
             const isAvailable = key.endsWith("Available");

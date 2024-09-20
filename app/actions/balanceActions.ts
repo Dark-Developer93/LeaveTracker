@@ -1,8 +1,8 @@
 "use server";
 
+import { Role } from "@prisma/client";
 import prisma from "../../lib/prisma";
 import { getCurrentUser } from "../../lib/session";
-import { Role } from "@prisma/client";
 
 type SubmittedCredits = {
   annual: number;
@@ -15,11 +15,6 @@ type SubmittedCredits = {
   year: string;
   name: string;
 };
-
-interface EditBody {
-  [key: string]: number | string;
-  id: string;
-}
 
 const allowedRoles = ["ADMIN", "MODERATOR"];
 
@@ -82,7 +77,7 @@ export async function updateBalance(formData: FormData) {
     Object.entries(rawData).map(([key, value]) => [
       key,
       parseInt(value as string, 10),
-    ])
+    ]),
   );
 
   await prisma.balances.update({
