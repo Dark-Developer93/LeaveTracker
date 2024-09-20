@@ -1,5 +1,5 @@
-import { getCurrentUser } from "../session";
 import prisma from "@/lib/prisma";
+import { getCurrentUser } from "../session";
 
 export async function getAllLeaveDays() {
   const loggedInUser = await getCurrentUser();
