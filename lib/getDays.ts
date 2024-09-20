@@ -43,12 +43,33 @@ export type Day = {
   today?: dayjs.Dayjs;
 };
 
+export const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+export const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
 export const getDays = (
   month = dayjs().month(),
   year = dayjs().year(),
 ): Day[] => {
   const firstDayOfMonth = dayjs().year(year).month(month).startOf("month");
   const lastDayOfMonth = dayjs().year(year).month(month).endOf("month");
+
+  const isToday = (date: dayjs.Dayjs) => {
+    return date.toDate().toDateString() === dayjs().toDate().toDateString();
+  };
 
   const days = Array.from({ length: lastDayOfMonth.date() }, (_, i) => {
     const currentDate = firstDayOfMonth.date(i + 1);
@@ -84,24 +105,3 @@ export const getDays = (
 
   return [...previousDays, ...days, ...forwardDays];
 };
-
-const isToday = (date: dayjs.Dayjs) => {
-  return date.toDate().toDateString() === dayjs().toDate().toDateString();
-};
-
-export const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-export const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
