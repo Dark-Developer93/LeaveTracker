@@ -98,8 +98,8 @@ const EditLeave = ({
   }
   return (
     <DialogWrapper
-      btnTitle="Edit"
-      title="Edit Leave"
+      btnTitle="Update Leave Status"
+      title="Update Leave Status"
       isBtn
       open={open}
       setOpen={() => setOpen(!open)}
@@ -137,11 +137,10 @@ const EditLeave = ({
                       <CommandInput placeholder="Search a status..." />
                       <CommandEmpty>No leave type found.</CommandEmpty>
                       <CommandGroup>
-                        {leaveStatus.map((status: LeaveStatus, i: any) => (
+                        {leaveStatus.map((status: LeaveStatus) => (
                           <CommandItem
                             value={status}
-                            // create a good key
-                            key={i}
+                            key={status}
                             onSelect={() => {
                               form.setValue("status", status);
                             }}

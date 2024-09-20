@@ -21,7 +21,7 @@ const LeavesTable = ({ leaves }: leaveProps) => {
     <Table>
       <TableHeader className="whitespace-nowrap">
         <TableRow>
-          <TableHead>Edit</TableHead>
+          <TableHead>Update Status</TableHead>
           <TableHead>User</TableHead>
           <TableHead>Type</TableHead>
           <TableHead>Year</TableHead>
