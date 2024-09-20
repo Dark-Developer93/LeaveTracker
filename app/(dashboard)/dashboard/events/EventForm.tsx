@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import {
   Form,
   FormControl,
@@ -13,51 +12,44 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { format } from "date-fns";
-
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
 import toast from "react-hot-toast";
 import * as z from "zod";
 import { cn } from "@/lib/utils";
 import { IoCalendarOutline } from "react-icons/io5";
 import { Calendar } from "@/components/ui/calendar";
 import { Textarea } from "@/components/ui/textarea";
-
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
+import { createEvent, updateEvent } from "@/app/actions/eventActions";
 
-interface EventFormProps {
-  mode: "add" | "update";
+type EventFormProps = {
+  mode: "create" | "update";
   initialState?: {
     id: string;
     title: string;
     description: string;
     startDate: Date;
   };
-}
+  onSuccessfulUpdate?: () => void;
+};
 
-const EventForm = ({ mode, initialState }: EventFormProps) => {
+const EventForm = ({
+  mode,
+  initialState,
+  onSuccessfulUpdate,
+}: EventFormProps) => {
   const router = useRouter();
 
   const formSchema = z.object({
-    title: z
-      .string({
-        required_error: "Please add a Title.",
-      })
-      .max(500),
-
-    description: z.string({
-      required_error: "Please add a Description.",
-    }),
-
-    startDate: z.date({
-      required_error: "A start date is required.",
-    }),
+    title: z.string({ required_error: "Please add a Title." }).max(500),
+    description: z.string({ required_error: "Please add a Description." }),
+    startDate: z.date({ required_error: "A start date is required." }),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -69,44 +61,37 @@ const EventForm = ({ mode, initialState }: EventFormProps) => {
     },
   });
 
-  console.log("initialState", initialState);
-
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      const formattedValues = {
-        ...values,
-        startDate: values.startDate.toISOString(),
-      };
+      const formData = new FormData();
+      formData.append("title", data.title);
+      formData.append("description", data.description);
+      formData.append("startDate", data.startDate.toISOString());
 
-      const endpoint = mode === "add" ? "/api/event" : "/api/event/eventId";
-      const method = mode === "add" ? "POST" : "PATCH";
-
-      const res = await fetch(endpoint, {
-        method,
-        body: JSON.stringify(formattedValues),
-      });
-
-      if (res.ok) {
-        toast.success(mode === "add" ? "Event Added" : "Event Updated", {
-          duration: 4000,
-        });
-        form.reset();
-        router.refresh();
+      if (mode === "create") {
+        await createEvent(formData);
+        toast.success("Event Added", { duration: 4000 });
       } else {
-        const errorMessage = await res.text();
-
-        toast.error(`An error occured ${errorMessage}`, { duration: 6000 });
+        formData.append("id", initialState!.id);
+        await updateEvent(formData);
+        toast.success("Event Updated", { duration: 4000 });
+        if (onSuccessfulUpdate) {
+          onSuccessfulUpdate();
+        }
       }
+
+      form.reset();
+      router.refresh();
     } catch (error) {
       console.error("An error occurred:", error);
       toast.error(`An error occurred: ${error}`);
     }
-  }
+  };
 
   return (
-    <div className=" bg-white p-4 rounded-md shadow-md dark:bg-black">
+    <div className="bg-white p-4 rounded-md shadow-md dark:bg-black">
       <h2 className="text-2xl text-center font-bold tracking-tight">
-        {mode === "add" ? "Add an Event" : "Update an Event"}
+        {mode === "create" ? "Add an Event" : "Update an Event"}
       </h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -152,10 +137,10 @@ const EventForm = ({ mode, initialState }: EventFormProps) => {
                   <PopoverTrigger asChild>
                     <FormControl>
                       <Button
-                        variant={"outline"}
+                        variant="outline"
                         className={cn(
                           "  inline-flex justify-between",
-                          !field.value && "text-muted-foreground"
+                          !field.value && "text-muted-foreground",
                         )}
                       >
                         {field.value ? (
@@ -182,7 +167,9 @@ const EventForm = ({ mode, initialState }: EventFormProps) => {
             )}
           />
 
-          <Button type="submit">{mode === "add" ? "Submit" : "Update"}</Button>
+          <Button type="submit">
+            {mode === "create" ? "Submit" : "Update"}
+          </Button>
         </form>
       </Form>
     </div>
