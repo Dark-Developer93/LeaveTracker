@@ -45,7 +45,7 @@ export type Day = {
 
 export const getDays = (
   month = dayjs().month(),
-  year = dayjs().year()
+  year = dayjs().year(),
 ): Day[] => {
   const firstDayOfMonth = dayjs().year(year).month(month).startOf("month");
   const lastDayOfMonth = dayjs().year(year).month(month).endOf("month");
@@ -79,7 +79,7 @@ export const getDays = (
         currentMonth: false,
         date: forwardDate,
       };
-    }
+    },
   );
 
   return [...previousDays, ...days, ...forwardDays];

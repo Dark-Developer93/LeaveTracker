@@ -5,7 +5,7 @@ export default async function calculateAndUpdateBalances(
   email: string,
   year: string,
   type: string,
-  days: number
+  days: number,
 ): Promise<void> {
   const balance = await prisma.balances.findFirst({
     where: {
