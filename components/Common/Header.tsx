@@ -53,7 +53,10 @@ const Header = ({ user }: HeaderProps) => {
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className=" text-slate-500 dark:text-slate-300">
+                  <button
+                    type="button"
+                    className=" text-slate-500 dark:text-slate-300"
+                  >
                     <BiSolidChevronDown size={22} />
                   </button>
                 </DropdownMenuTrigger>
