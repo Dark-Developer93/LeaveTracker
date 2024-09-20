@@ -101,7 +101,7 @@ const EventsTable = ({ events }: UserProps) => {
                       open={openEventId === event.id}
                       setOpen={() =>
                         setOpenEventId(
-                          openEventId === event.id ? null : event.id
+                          openEventId === event.id ? null : event.id,
                         )
                       }
                     >
