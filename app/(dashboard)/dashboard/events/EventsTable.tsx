@@ -96,13 +96,12 @@ const EventsTable = ({ events }: UserProps) => {
                   </TableCell>
                   <TableCell>
                     <DialogWrapper
-                      title="Edit Event"
                       icon={IoPencil}
                       isBtn={false}
                       open={openEventId === event.id}
                       setOpen={() =>
                         setOpenEventId(
-                          openEventId === event.id ? null : event.id,
+                          openEventId === event.id ? null : event.id
                         )
                       }
                     >
