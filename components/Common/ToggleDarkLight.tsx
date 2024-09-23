@@ -25,9 +25,9 @@ const ToggleDarkLight = () => {
   return (
     <Button title="Toggle theme" variant="outline" onClick={toggleTheme}>
       {currentTheme === "dark" ? (
-        <Sun className="h-[1.2rem] w-[1.2rem]" />
-      ) : (
         <Moon className="h-[1.2rem] w-[1.2rem]" />
+      ) : (
+        <Sun className="h-[1.2rem] w-[1.2rem]" />
       )}
       <span className="sr-only">Toggle theme</span>
     </Button>
