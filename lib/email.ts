@@ -18,7 +18,7 @@ const transporter = nodemailer.createTransport({
 export async function sendEmail(
   to: string,
   subject: string,
-  emailComponent: JSX.Element
+  emailComponent: JSX.Element,
 ) {
   try {
     const html = render(emailComponent);
@@ -39,7 +39,7 @@ export function generateLeaveRequestEmail(
   userName: string,
   leaveType: string,
   startDate: string,
-  endDate: string
+  endDate: string,
 ) {
   return LeaveRequestEmail({ userName, leaveType, startDate, endDate });
 }
@@ -49,7 +49,7 @@ export function generateLeaveStatusEmail(
   leaveType: string,
   startDate: string,
   endDate: string,
-  status: string
+  status: string,
 ) {
   return LeaveStatusEmail({ userName, leaveType, startDate, endDate, status });
 }
@@ -57,7 +57,7 @@ export function generateLeaveStatusEmail(
 export function generateContactFormEmail(
   name: string,
   email: string,
-  message: string
+  message: string,
 ) {
   return ContactFormEmail({ name, email, message });
 }
