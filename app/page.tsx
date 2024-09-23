@@ -38,7 +38,7 @@ export default function LandingPage() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("/api/contact-us", {
+      const response = await fetch("/api/email/contact-us", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
