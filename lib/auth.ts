@@ -6,10 +6,10 @@ import prisma from "@/lib/prisma";
 
 const getRedirectUri = () => {
   if (process.env.VERCEL_ENV === "production") {
-    return `${process.env.VERCEL_URL}/api/auth/callback/google`;
+    return `https://${process.env.VERCEL_URL}/api/auth/callback/google`;
   }
   if (process.env.VERCEL_ENV === "preview") {
-    return `${process.env.VERCEL_BRANCH_URL}/api/auth/callback/google`;
+    return `https://${process.env.VERCEL_BRANCH_URL}/api/auth/callback/google`;
   }
   return "http://localhost:3000/api/auth/callback/google";
 };
