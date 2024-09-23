@@ -1,10 +1,10 @@
 import * as React from "react";
 import Image from "next/image";
+import { User } from "@prisma/client";
 import { AdminRoutes, ModeratorRoutes, UserRoutes } from "./Routes";
 import { RenderIconsRoutes } from "./RenderRoutes";
 import ToggleDarkLight from "./ToggleDarkLight";
 import LogoutBtn from "./LogoutBtn";
-import { User } from "@prisma/client";
 
 type SideBarProps = {
   user: User;

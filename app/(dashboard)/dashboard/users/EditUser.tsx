@@ -35,6 +35,7 @@ import { Role, User } from "@prisma/client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { UserRoles, orgDepartments, orgTitles } from "@/lib/data/dummy-data";
+import { updateUser } from "@/app/actions/userActions";
 
 type EditUserProps = {
   user: User;
@@ -51,7 +52,7 @@ const EditUser = ({ user }: EditUserProps) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
-  const formSchema = z.object({
+  const userFormSchema = z.object({
     phone: z.string().max(50),
 
     department: z.string(),
@@ -61,8 +62,8 @@ const EditUser = ({ user }: EditUserProps) => {
     role: z.enum(UserRoles),
   });
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof userFormSchema>>({
+    resolver: zodResolver(userFormSchema),
     defaultValues: {
       phone: user.phone,
       department: user.department,
@@ -71,26 +72,22 @@ const EditUser = ({ user }: EditUserProps) => {
     } as DefaultValues,
   });
 
-  async function SubmitEditUser(values: z.infer<typeof formSchema>) {
-    const id = user.id;
+  async function SubmitEditUser(values: z.infer<typeof userFormSchema>) {
+    const { id } = user;
     try {
-      const res = await fetch("/api/user/userId", {
-        method: "PATCH",
-        body: JSON.stringify({ ...values, id }),
+      const formData = new FormData();
+      formData.append("id", id);
+      Object.entries(values).forEach(([key, value]) => {
+        formData.append(key, value);
       });
 
-      if (res.ok) {
-        toast.success("User Edited Successfully", { duration: 4000 });
-        setOpen(false);
-        router.refresh();
-      } else {
-        const errorMessage = await res.text();
+      await updateUser(formData);
 
-        toast.error(`An error occured ${errorMessage}`, { duration: 6000 });
-      }
+      toast.success("User Edited Successfully", { duration: 4000 });
+      setOpen(false);
+      router.refresh();
     } catch (error) {
-      console.error("An error occurred:", error);
-      toast.error(`An Unexpected error occured ${error}`);
+      toast.error(`An error occurred: ${error}`);
     }
   }
 
@@ -135,12 +132,12 @@ const EditUser = ({ user }: EditUserProps) => {
                         role="combobox"
                         className={cn(
                           " justify-between",
-                          !field.value && "text-muted-foreground"
+                          !field.value && "text-muted-foreground",
                         )}
                       >
                         {field.value
                           ? orgDepartments.find(
-                              (dpt) => dpt.label === field.value
+                              (dpt) => dpt.label === field.value,
                             )?.label
                           : "Select a department"}
                         <PiCaretUpDownBold className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -165,7 +162,7 @@ const EditUser = ({ user }: EditUserProps) => {
                                 "mr-2 h-4 w-4",
                                 dpt.label === field.value
                                   ? "opacity-100"
-                                  : "opacity-0"
+                                  : "opacity-0",
                               )}
                             />
                             {dpt.label}
@@ -193,12 +190,12 @@ const EditUser = ({ user }: EditUserProps) => {
                         role="combobox"
                         className={cn(
                           " justify-between",
-                          !field.value && "text-muted-foreground"
+                          !field.value && "text-muted-foreground",
                         )}
                       >
                         {field.value
                           ? orgTitles.find(
-                              (title) => title.label === field.value
+                              (title) => title.label === field.value,
                             )?.label
                           : "Select a title"}
                         <PiCaretUpDownBold className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -223,7 +220,7 @@ const EditUser = ({ user }: EditUserProps) => {
                                 "mr-2 h-4 w-4",
                                 title.label === field.value
                                   ? "opacity-100"
-                                  : "opacity-0"
+                                  : "opacity-0",
                               )}
                             />
                             {title.label}
@@ -252,7 +249,7 @@ const EditUser = ({ user }: EditUserProps) => {
                         role="combobox"
                         className={cn(
                           " justify-between",
-                          !field.value && "text-muted-foreground"
+                          !field.value && "text-muted-foreground",
                         )}
                       >
                         {field.value
@@ -267,10 +264,10 @@ const EditUser = ({ user }: EditUserProps) => {
                       <CommandInput placeholder="Search a role..." />
                       <CommandEmpty>No role found.</CommandEmpty>
                       <CommandGroup>
-                        {UserRoles.map((role, i) => (
+                        {UserRoles.map((role) => (
                           <CommandItem
                             value={role}
-                            key={i}
+                            key={role}
                             onSelect={() => {
                               form.setValue("role", role);
                             }}
@@ -280,7 +277,7 @@ const EditUser = ({ user }: EditUserProps) => {
                                 "mr-2 h-4 w-4",
                                 role === field.value
                                   ? "opacity-100"
-                                  : "opacity-0"
+                                  : "opacity-0",
                               )}
                             />
                             {role}

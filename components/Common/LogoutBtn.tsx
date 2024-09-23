@@ -6,6 +6,7 @@ import { TbLogout2 } from "react-icons/tb";
 const LogoutBtn = () => {
   return (
     <button
+      type="button"
       className="p-1 bg-primary text-white rounded-full dark:bg-primary"
       onClick={(e) => {
         e.preventDefault();

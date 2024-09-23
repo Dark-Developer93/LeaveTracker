@@ -1,9 +1,6 @@
 import { HiOutlineUserGroup } from "react-icons/hi";
-import {
-  HiMiniComputerDesktop,
-  HiOutlineSquares2X2,
-} from "react-icons/hi2";
-import { MdOutlineBalance, MdEvent, MdHistory  } from "react-icons/md";
+import { HiMiniComputerDesktop, HiOutlineSquares2X2 } from "react-icons/hi2";
+import { MdOutlineBalance, MdEvent, MdHistory } from "react-icons/md";
 import { TbListCheck } from "react-icons/tb";
 
 export const AdminRoutes = [

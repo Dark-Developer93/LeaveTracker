@@ -92,15 +92,14 @@ const EditLeave = ({
       setOpen(false);
       router.refresh();
     } catch (error) {
-      console.error("An error occurred:", error);
       toast.error(`An Unexpected error occurred: ${error}`);
     }
   }
   return (
     <DialogWrapper
-      btnTitle="Edit"
-      title="Edit Leave"
-      isBtn={true}
+      btnTitle="Update Leave Status"
+      title="Update Leave Status"
+      isBtn
       open={open}
       setOpen={() => setOpen(!open)}
     >
@@ -120,12 +119,12 @@ const EditLeave = ({
                         role="combobox"
                         className={cn(
                           "justify-between",
-                          !field.value && "text-muted-foreground"
+                          !field.value && "text-muted-foreground",
                         )}
                       >
                         {field.value
                           ? leaveStatus.find(
-                              (status: LeaveStatus) => status === field.value
+                              (status: LeaveStatus) => status === field.value,
                             )
                           : "Select a decision"}
                         <PiCaretUpDownBold className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -137,11 +136,10 @@ const EditLeave = ({
                       <CommandInput placeholder="Search a status..." />
                       <CommandEmpty>No leave type found.</CommandEmpty>
                       <CommandGroup>
-                        {leaveStatus.map((status: LeaveStatus, i: any) => (
+                        {leaveStatus.map((status: LeaveStatus) => (
                           <CommandItem
                             value={status}
-                            // create a good key
-                            key={i}
+                            key={status}
                             onSelect={() => {
                               form.setValue("status", status);
                             }}
@@ -151,7 +149,7 @@ const EditLeave = ({
                                 "mr-2 h-4 w-4",
                                 status === field.value
                                   ? "opacity-100"
-                                  : "opacity-0"
+                                  : "opacity-0",
                               )}
                             />
                             {status}

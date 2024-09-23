@@ -11,11 +11,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { User } from "@prisma/client";
 import Container from "./Container";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import SideBarDrawer from "./SideBarDrawer";
 import ToggleDarkLight from "./ToggleDarkLight";
-import { User } from "@prisma/client";
 import LogoutBtn from "./LogoutBtn";
 import DialogWrapper from "./DialogWrapper";
 
@@ -53,7 +53,10 @@ const Header = ({ user }: HeaderProps) => {
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className=" text-slate-500 dark:text-slate-300">
+                  <button
+                    type="button"
+                    className=" text-slate-500 dark:text-slate-300"
+                  >
                     <BiSolidChevronDown size={22} />
                   </button>
                 </DropdownMenuTrigger>
@@ -69,7 +72,7 @@ const Header = ({ user }: HeaderProps) => {
                       linkTitle="Support"
                       title="Support Dialog"
                       description=" This is the support dialog"
-                      isLink={true}
+                      isLink
                       open={open}
                       setOpen={() => setOpen(!open)}
                       onClick={(event) => event.stopPropagation()}

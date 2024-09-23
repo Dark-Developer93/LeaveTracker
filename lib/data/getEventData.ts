@@ -11,7 +11,8 @@ export async function getEventsData() {
 
     return [...eventsData];
   } catch (error) {
-    console.error("Error fetching user info:", error);
-    throw new Error("Error fetching user info");
+    // eslint-disable-next-line no-console
+    console.error("Error fetching events data:", error);
+    throw new Error("Error fetching events data");
   }
 }

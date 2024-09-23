@@ -1,8 +1,7 @@
 import Link from "next/link";
 import React from "react";
-import { AuthForm } from "./AuthForm";
-
 import Image from "next/image";
+import { AuthForm } from "./AuthForm";
 
 const AuthComponent = (): JSX.Element => {
   return (
