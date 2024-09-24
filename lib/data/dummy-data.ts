@@ -80,7 +80,7 @@ export const orgTitles = [
   },
 ] as const;
 
-export const UserRoles = ["ADMIN", "USER", "MODERATOR"] as const;
+export const UserRoles = ["ADMIN", "USER", "MODERATOR", "SUPERVISOR"] as const;
 
 export const leaveStatus = [
   "APPROVED",

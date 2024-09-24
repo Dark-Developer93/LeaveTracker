@@ -1,6 +1,11 @@
 import * as React from "react";
 import Image from "next/image";
-import { AdminRoutes, ModeratorRoutes, UserRoutes } from "./Routes";
+import {
+  AdminRoutes,
+  ModeratorRoutes,
+  UserRoutes,
+  SupervisorRoutes,
+} from "./Routes";
 import { RenderIconsRoutes } from "./RenderRoutes";
 import ToggleDarkLight from "./ToggleDarkLight";
 import LogoutBtn from "./LogoutBtn";
@@ -15,12 +20,16 @@ const SideBar = ({ user }: SideBarProps) => {
     return <>{RenderIconsRoutes({ routes: AdminRoutes })}</>;
   };
 
-  const userIconsRouter = () => {
-    return <>{RenderIconsRoutes({ routes: UserRoutes })}</>;
-  };
-
   const moderatorIconsRouter = () => {
     return <>{RenderIconsRoutes({ routes: ModeratorRoutes })}</>;
+  };
+
+  const supervisorIconsRouter = () => {
+    return <>{RenderIconsRoutes({ routes: SupervisorRoutes })}</>;
+  };
+
+  const userIconsRouter = () => {
+    return <>{RenderIconsRoutes({ routes: UserRoutes })}</>;
   };
 
   return (
@@ -36,6 +45,7 @@ const SideBar = ({ user }: SideBarProps) => {
             {user?.role === "ADMIN" && adminIconsRouter()}
             {user?.role === "USER" && userIconsRouter()}
             {user?.role === "MODERATOR" && moderatorIconsRouter()}
+            {user?.role === "SUPERVISOR" && supervisorIconsRouter()}
           </nav>
         </div>
         {/* BOTTOM PART  */}

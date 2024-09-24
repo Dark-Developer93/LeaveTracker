@@ -1,11 +1,17 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { BsCheckLg } from "react-icons/bs";
+import { Role, User } from "@prisma/client";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DialogWrapper from "@/components/Common/DialogWrapper";
 import toast from "react-hot-toast";
 import { IoPencil } from "react-icons/io5";
+import { PiCaretUpDownBold } from "react-icons/pi";
+
 import {
   Form,
   FormControl,
@@ -26,18 +32,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import MultipleSelector, { Option } from "@/components/Other/MultipleSelector";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PiCaretUpDownBold } from "react-icons/pi";
 import { cn } from "@/lib/utils";
-import { BsCheckLg } from "react-icons/bs";
-import { Role, User } from "@prisma/client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { UserRoles, orgDepartments, orgTitles } from "@/lib/data/dummy-data";
 
 type EditUserProps = {
   user: User;
+  users: User[];
 };
 
 type DefaultValues = {
@@ -45,20 +48,21 @@ type DefaultValues = {
   department: string;
   title: string;
   role: Role;
+  supervisors: string[];
+  supervisees: string[];
 };
 
-const EditUser = ({ user }: EditUserProps) => {
+const EditUser = ({ user, users }: EditUserProps) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
   const formSchema = z.object({
     phone: z.string().max(50),
-
     department: z.string(),
-
     title: z.string(),
-
     role: z.enum(UserRoles),
+    supervisors: z.array(z.string()),
+    supervisees: z.array(z.string()),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -68,15 +72,32 @@ const EditUser = ({ user }: EditUserProps) => {
       department: user.department,
       title: user.title,
       role: user.role,
+      supervisors: user.supervisors || [],
+      supervisees: user.supervisees || [],
     } as DefaultValues,
   });
+
+  const filteredUsers = users.filter((u) => u.id !== user.id);
 
   async function SubmitEditUser(values: z.infer<typeof formSchema>) {
     const id = user.id;
     try {
+      const supervisorIds = users
+        .filter((user) => values.supervisors.includes(user.email))
+        .map((user) => user.id);
+
+      const superviseeIds = users
+        .filter((user) => values.supervisees.includes(user.email))
+        .map((user) => user.id);
+
       const res = await fetch("/api/user/userId", {
         method: "PATCH",
-        body: JSON.stringify({ ...values, id }),
+        body: JSON.stringify({
+          ...values,
+          id,
+          supervisors: supervisorIds,
+          supervisees: superviseeIds,
+        }),
       });
 
       if (res.ok) {
@@ -93,6 +114,8 @@ const EditUser = ({ user }: EditUserProps) => {
       toast.error(`An Unexpected error occured ${error}`);
     }
   }
+
+  console.log("user", user);
 
   return (
     <DialogWrapper
@@ -290,6 +313,82 @@ const EditUser = ({ user }: EditUserProps) => {
                     </Command>
                   </PopoverContent>
                 </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="supervisors"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Supervisors</FormLabel>
+                <FormControl>
+                  <MultipleSelector
+                    {...field}
+                    defaultOptions={filteredUsers.map((user) => ({
+                      value: user.email,
+                      label: user.name || "",
+                    }))}
+                    placeholder="Select supervisors for this user"
+                    emptyIndicator={
+                      <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+                        No results found.
+                      </p>
+                    }
+                    value={field.value.map((email) => ({
+                      value: email,
+                      label:
+                        users.find((user) => user.email === email)?.name || "",
+                    }))}
+                    onChange={(value: Option[]) => {
+                      const supervisorEmails = value.map(
+                        (option) => option.value
+                      );
+                      form.setValue("supervisors", supervisorEmails);
+                      field.onChange(supervisorEmails);
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="supervisees"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Supervisees</FormLabel>
+                <FormControl>
+                  <MultipleSelector
+                    {...field}
+                    defaultOptions={filteredUsers.map((user) => ({
+                      value: user.email,
+                      label: user.name || "",
+                    }))}
+                    placeholder="Select supervisees for this user"
+                    emptyIndicator={
+                      <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+                        No results found.
+                      </p>
+                    }
+                    value={field.value.map((email) => ({
+                      value: email,
+                      label:
+                        users.find((user) => user.email === email)?.name || "",
+                    }))}
+                    onChange={(value: Option[]) => {
+                      const superviseeEmails = value.map(
+                        (option) => option.value
+                      );
+                      form.setValue("supervisees", superviseeEmails);
+                      field.onChange(superviseeEmails);
+                    }}
+                  />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
