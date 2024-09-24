@@ -24,11 +24,8 @@ const AdminLeaves = async () => {
       allSuperviseeUsers
     .map((user) => user.email)
     .includes(leave.userEmail)
-  );
-}
-
-console.log(allSuperviseeUsers);
-  console.log(allLeaves);
+    );
+  }
 
   return (
     <Container>
