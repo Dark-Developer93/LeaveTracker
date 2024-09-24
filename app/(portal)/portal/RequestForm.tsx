@@ -87,6 +87,30 @@ const RequestForm = ({ user }: Props) => {
       toast.success("Leave Submitted", { duration: 4000 });
       setOpen(false);
       form.reset();
+
+      // Send email notification
+      try {
+        const response = await fetch("/api/email/leave-request", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userName: user.name,
+            email: user.email,
+            leaveType: values.leave,
+            startDate: values.startDate.toISOString(),
+            endDate: values.endDate.toISOString(),
+          }),
+        });
+
+        if (!response.ok) {
+          toast.error("Failed to send email notification");
+        }
+        toast.success("Email sent successfully");
+      } catch (emailError) {
+        toast.error(`Failed to send email notification: ${emailError}`);
+      }
     } catch (error) {
       toast.error(`An error occurred: ${error}`);
     }

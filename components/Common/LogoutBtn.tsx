@@ -1,20 +1,21 @@
 "use client";
 
 import { signOut } from "next-auth/react";
-import { TbLogout2 } from "react-icons/tb";
+import { TbLogout } from "react-icons/tb";
+import { Button } from "@/components/ui/button";
 
 const LogoutBtn = () => {
   return (
-    <button
-      type="button"
-      className="p-1 bg-primary text-white rounded-full dark:bg-primary"
+    <Button
+      title="Logout"
+      variant="outline"
       onClick={(e) => {
         e.preventDefault();
         signOut({ callbackUrl: "/" });
       }}
     >
-      <TbLogout2 size={24} />
-    </button>
+      <TbLogout size={24} />
+    </Button>
   );
 };
 

@@ -3,8 +3,6 @@ import Image from "next/image";
 import { User } from "@prisma/client";
 import { AdminRoutes, ModeratorRoutes, UserRoutes } from "./Routes";
 import { RenderIconsRoutes } from "./RenderRoutes";
-import ToggleDarkLight from "./ToggleDarkLight";
-import LogoutBtn from "./LogoutBtn";
 
 type SideBarProps = {
   user: User;
@@ -37,11 +35,6 @@ const SideBar = ({ user }: SideBarProps) => {
             {user?.role === "USER" && userIconsRouter()}
             {user?.role === "MODERATOR" && moderatorIconsRouter()}
           </nav>
-        </div>
-        {/* BOTTOM PART  */}
-        <div className="flex flex-col items-center space-y-6 my-8">
-          <LogoutBtn />
-          <ToggleDarkLight />
         </div>
       </div>
     </div>

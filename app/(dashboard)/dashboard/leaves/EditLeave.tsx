@@ -91,6 +91,32 @@ const EditLeave = ({
       toast.success("Leave updated successfully", { duration: 4000 });
       setOpen(false);
       router.refresh();
+
+      // Send email notification
+      try {
+        const response = await fetch("/api/email/leave-status", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userName: user,
+            leaveType: type,
+            startDate: startDate.toISOString(),
+            endDate: new Date(
+              startDate.getTime() + days * 24 * 60 * 60 * 1000,
+            ).toISOString(),
+            status: values.status,
+            email,
+          }),
+        });
+
+        if (!response.ok) {
+          toast.error("Failed to send email notification");
+        }
+      } catch (emailError) {
+        toast.error(`Failed to send email notification: ${emailError}`);
+      }
     } catch (error) {
       toast.error(`An Unexpected error occurred: ${error}`);
     }

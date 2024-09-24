@@ -43,7 +43,7 @@ export function RenderRoutes({ routes }: Props) {
   return (
     <>
       {routes.map((route) => (
-        <Link href={route.url} key={route.title} className="my-4  rounded-md">
+        <Link href={route.url} key={route.title} className="my-4 rounded-md">
           <div className="flex items-center justify-between ">
             <div className="px-3">
               {React.createElement(route.icon, {
