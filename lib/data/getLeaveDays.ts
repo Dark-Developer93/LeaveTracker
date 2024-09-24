@@ -1,5 +1,5 @@
-import { getCurrentUser } from "../session";
 import prisma from "@/lib/prisma";
+import { getCurrentUser } from "../session";
 
 export async function getAllLeaveDays() {
   const loggedInUser = await getCurrentUser();
@@ -17,7 +17,8 @@ export async function getAllLeaveDays() {
     });
 
     return [...leaves];
-  } catch (error: any) {
+  } catch (error) {
+    // eslint-disable-next-line no-console
     console.error("Error fetching all leave days:", error);
     throw new Error("Error fetching all leave days");
   }
@@ -39,6 +40,7 @@ export async function getUserLeaveDays() {
 
     return [...leaves];
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error("Error fetching user leave days:", error);
     throw new Error("Error fetching user leave days");
   }

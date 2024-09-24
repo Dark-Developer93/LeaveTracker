@@ -56,33 +56,28 @@ export async function updateLeave(formData: FormData) {
   const formattedStartDate = new Date(startDate).toISOString();
   const moderator = loggedInUser.name;
 
-  try {
-    if (status === LeaveStatus.APPROVED) {
-      await calculateAndUpdateBalances(email, year, type, Number(days));
-      await prisma.events.create({
-        data: {
-          startDate: formattedStartDate,
-          title: `${user} on Leave`,
-          description: `For ${days} days`,
-        },
-      });
-    }
-
-    await prisma.leave.update({
-      where: { id },
+  if (status === LeaveStatus.APPROVED) {
+    await calculateAndUpdateBalances(email, year, type, Number(days));
+    await prisma.events.create({
       data: {
-        moderatorNote: notes,
-        status: status as LeaveStatus,
-        updatedAt,
-        moderator,
+        startDate: formattedStartDate,
+        title: `${user} on Leave`,
+        description: `For ${days} days`,
       },
     });
-
-    return { message: "Success" };
-  } catch (error) {
-    console.error(error);
-    throw new Error(`Failed to update leave: ${error}`);
   }
+
+  await prisma.leave.update({
+    where: { id },
+    data: {
+      moderatorNote: notes,
+      status: status as LeaveStatus,
+      updatedAt,
+      moderator,
+    },
+  });
+
+  return { message: "Success" };
 }
 
 export const submitLeave = async (formData: SubmittedLeave) => {

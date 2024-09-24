@@ -11,8 +11,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Balances } from "@prisma/client";
-import EditBalances from "./EditBalances";
 import { Badge } from "@/components/ui/badge";
+import EditBalances from "./EditBalances";
 
 type BalanceRowType = {
   title: string;
@@ -23,8 +23,8 @@ const BalanceRow = ({ title, values }: BalanceRowType) => (
   <TableHead className="text-center border-none">
     {title}
     <TableRow>
-      {values.map((value, index) => (
-        <TableHead key={index} className="border-none">
+      {values.map((value) => (
+        <TableHead key={value} className="border-none">
           {value}
         </TableHead>
       ))}
@@ -61,8 +61,8 @@ const BalancesTable = ({ balances }: BalanceProps) => {
     return categories.map((category) => (
       <TableCell key={category}>
         <TableRow>
-          {["Credit", "Used", "Available"].map((type, index) => (
-            <TableCell key={index} className={`w-[100px]`}>
+          {["Credit", "Used", "Available"].map((type) => (
+            <TableCell key={type} className="w-[100px]">
               {bal[`${category}${type}`]}
             </TableCell>
           ))}
@@ -79,9 +79,9 @@ const BalancesTable = ({ balances }: BalanceProps) => {
             <TableHead className="text-center">Edit</TableHead>
             <TableHead className="text-center">User</TableHead>
             <TableHead className="text-center">Year</TableHead>
-            {balanceCategories.map((category, index) => (
+            {balanceCategories.map((category) => (
               <BalanceRow
-                key={index}
+                key={category.title}
                 title={category.title}
                 values={category.values}
               />

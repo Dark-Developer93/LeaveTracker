@@ -45,8 +45,7 @@ const UsersTable = ({ users }: UsersTableProps) => {
                   alt={user?.name as string}
                 />
                 <AvatarFallback>
-                  {" "}
-                  {user.name?.charAt(0).toUpperCase()}{" "}
+                  {user.name?.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
             </TableCell>

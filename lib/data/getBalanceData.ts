@@ -19,8 +19,9 @@ export async function getUserBalances() {
 
     return balances;
   } catch (error) {
-    console.error("Error fetching user leave days:", error);
-    throw new Error("Error fetching user leave days");
+    // eslint-disable-next-line no-console
+    console.error("Error fetching user balances:", error);
+    throw new Error("Error fetching user balances");
   }
 }
 
@@ -40,7 +41,8 @@ export async function getAllBalances() {
     });
 
     return [...balances];
-  } catch (error: any) {
+  } catch (error) {
+    // eslint-disable-next-line no-console
     console.error("Error fetching all balances :", error);
     throw new Error("Error fetching all balances");
   }

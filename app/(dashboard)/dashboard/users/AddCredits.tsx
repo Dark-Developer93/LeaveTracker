@@ -7,9 +7,9 @@ import toast from "react-hot-toast";
 import { FaPlus } from "react-icons/fa6";
 
 import DialogWrapper from "@/components/Common/DialogWrapper";
-import CreditField from "./CreditField";
 import { Button } from "@/components/ui/button";
 import { addCredits } from "@/app/actions/balanceActions";
+import CreditField from "./CreditField";
 
 const creditTypes = [
   "annual",
@@ -62,7 +62,6 @@ const AddCredits = ({ email, name }: Props) => {
       setOpen(false);
       router.refresh();
     } catch (error) {
-      console.error("An error occurred:", error);
       toast.error(`An Unexpected error occurred ${error}`);
     }
   }

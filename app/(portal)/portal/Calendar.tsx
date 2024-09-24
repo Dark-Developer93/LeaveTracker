@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import dayjs from "dayjs";
 import Container from "@/components/Common/Container";
@@ -7,10 +8,10 @@ import CalendarHeader from "@/app/(portal)/portal/CalendarHeader";
 import { Events } from "@prisma/client";
 
 type CalendarProps = {
-  events: Events[]
-}
+  events: Events[];
+};
 
-const Calendar = ({events}: CalendarProps) => {
+const Calendar = ({ events }: CalendarProps) => {
   const currentDate = dayjs();
 
   const [today, setToday] = useState(currentDate);

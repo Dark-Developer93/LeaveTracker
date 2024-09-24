@@ -30,8 +30,8 @@ const DialogWrapper = ({
   children,
   btnTitle = "Close",
   linkTitle,
-  title = "Title",
-  description = "Description",
+  title,
+  description,
   isBtn,
   isLink,
   icon: Icon,
@@ -47,26 +47,35 @@ const DialogWrapper = ({
     }
   };
 
+  const renderTrigger = () => {
+    if (isBtn) {
+      return <Button className="text-white">{btnTitle}</Button>;
+    }
+    if (isLink) {
+      return (
+        <Button
+          variant="link"
+          className="p-0 m-0 h-5 text-secondary-foreground font-normal"
+        >
+          {linkTitle}
+        </Button>
+      );
+    }
+    if (Icon) {
+      return (
+        <Icon
+          className="text-primary cursor-pointer hover:text-primary/50 dark:hover:text-primary"
+          size={24}
+        />
+      );
+    }
+    return null;
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild onClick={handleClick}>
-        {isBtn ? (
-          <Button className="text-white">{btnTitle}</Button>
-        ) : isLink ? (
-          <Button
-            variant="link"
-            className="p-0 m-0 h-5 text-secondary-foreground font-normal"
-          >
-            {linkTitle}
-          </Button>
-        ) : (
-          Icon && (
-            <Icon
-              className=" text-primary cursor-pointer hover:text-primary/50 dark:hover:text-primary"
-              size={24}
-            />
-          )
-        )}
+        {renderTrigger()}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

@@ -1,14 +1,20 @@
 "use client";
 
-import DialogWrapper from "@/components/Common/DialogWrapper";
 import { FormEvent, useReducer, useState } from "react";
-import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+
+import toast from "react-hot-toast";
 import { IoPencil } from "react-icons/io5";
-import { Button } from "@/components/ui/button";
+
 import { Balances } from "@prisma/client";
+import { updateBalance } from "@/app/actions/balanceActions";
+import DialogWrapper from "@/components/Common/DialogWrapper";
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+
+// TODO: Uncomment the below code to use zod for validation
+// import { z } from "zod";
 
 type State = {
   [key: string]: number;
@@ -56,76 +62,93 @@ const EditBalances = ({ balance }: Props) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const router = useRouter();
 
+  // const balancesFormSchema = z.object({
+  //   annualCredit: z.number(),
+  //   annualUsed: z.number(),
+  //   annualAvailable: z.number(),
+  //   familyCredit: z.number(),
+  //   familyUsed: z.number(),
+  //   familyAvailable: z.number(),
+  //   sickCredit: z.number(),
+  //   sickUsed: z.number(),
+  //   sickAvailable: z.number(),
+  //   maternityCredit: z.number(),
+  //   maternityUsed: z.number(),
+  //   maternityAvailable: z.number(),
+  //   paternityCredit: z.number(),
+  //   paternityUsed: z.number(),
+  //   paternityAvailable: z.number(),
+  //   studyCredit: z.number(),
+  //   studyUsed: z.number(),
+  //   studyAvailable: z.number(),
+  //   unpaidUsed: z.number(),
+  // });
+
   const handleInputChange =
     (type: string) => (e: FormEvent<HTMLInputElement>) => {
+      const newValue = e.currentTarget.valueAsNumber;
       // Dispatch the change for the current field
       dispatch({
         type,
-        value: e.currentTarget.valueAsNumber,
+        value: newValue,
       });
 
       // TODO: There is a bug when the below code is running that make the available values to be either extra by one or less by one
 
       // // Recalculate available values if the type is Credit or Used
-      // if (type.endsWith("Credit") || type.endsWith("Used")) {
-      //    const baseType = type.replace(/Credit|Used/, "");
-      //    const creditKey = `${baseType}Credit`;
-      //    const usedKey = `${baseType}Used`;
-      //    const availableKey = `${baseType}Available`;
+      if (type.endsWith("Credit") || type.endsWith("Used")) {
+        const baseType = type.replace(/Credit|Used/, "");
+        const creditKey = `${baseType}Credit`;
+        const usedKey = `${baseType}Used`;
+        const availableKey = `${baseType}Available`;
 
-      //    const credit = state[creditKey] || 0;
-      //    const used = state[usedKey] || 0;
-      //    const available = credit - used;
+        const credit = type.endsWith("Credit")
+          ? newValue
+          : state[creditKey] || 0;
+        const used = type.endsWith("Used") ? newValue : state[usedKey] || 0;
+        const available = credit - used;
 
-      //    // Dispatch the change for the available field
-      //    dispatch({
-      //      type: availableKey,
-      //      value: available,
-      //    });
-      // }
+        // Dispatch the change for the available field
+        dispatch({
+          type: availableKey,
+          value: available,
+        });
+      }
     };
 
-  async function submitEditedBal(e: FormEvent<HTMLFormElement>) {
+  async function submitEditedBalances(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
-      const id = balance.id;
-      const formattedValues = {
+      const { id } = balance;
+      const formData = new FormData();
+      Object.entries({
         ...state,
         id,
-      };
-
-      const res = await fetch("/api/balance/balanceId", {
-        method: "PATCH",
-        body: JSON.stringify(formattedValues),
+      }).forEach(([key, value]) => {
+        formData.append(key, value.toString());
       });
 
-      if (res.ok) {
-        toast.success("Edit Successful", { duration: 4000 });
-        setOpen(false);
-        router.refresh();
-      } else {
-        const errorMessage = await res.text();
-
-        toast.error(`An error occured ${errorMessage}`, { duration: 6000 });
-      }
+      await updateBalance(formData);
+      toast.success("Edit Successful", { duration: 4000 });
+      setOpen(false);
+      router.refresh();
     } catch (error) {
-      console.error("An error occurred:", error);
-      toast.error(`An Unexpected error occured ${error}`);
+      toast.error(`An error occurred: ${error}`);
     }
   }
 
   return (
     <DialogWrapper
-      title="Edit Credits"
+      title="Edit Balances"
       icon={IoPencil}
       isBtn={false}
       open={open}
       setOpen={() => setOpen(!open)}
     >
-      <form onSubmit={submitEditedBal}>
+      <form onSubmit={submitEditedBalances}>
         <div className="grid grid-cols-3 gap-2 my-3">
           {Object.keys(initialState).map((key) => {
-            // const isAvailable = key.endsWith("Available");
+            const isAvailable = key.endsWith("Available");
             return (
               <div className="flex flex-col" key={key}>
                 <Label className="text-xs">{key}</Label>
@@ -133,7 +156,7 @@ const EditBalances = ({ balance }: Props) => {
                   type="number"
                   onChange={handleInputChange(key)}
                   value={state[key]}
-                  //   disabled={isAvailable} // Disable available inputs
+                  disabled={isAvailable} // Disable available inputs
                 />
               </div>
             );

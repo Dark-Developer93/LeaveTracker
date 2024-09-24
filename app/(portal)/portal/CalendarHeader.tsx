@@ -1,13 +1,13 @@
 import React from "react";
 import dayjs from "dayjs";
 import { IoMdArrowDropleft, IoMdArrowDropright } from "react-icons/io";
+import { months } from "@/lib/getDays";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "../../../components/ui/tooltip";
-import { months } from "@/lib/getDays";
 
 type CalendarHeaderProps = {
   today: dayjs.Dayjs;
@@ -41,14 +41,15 @@ const CalendarHeader = ({
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        <h1
-          className=" cursor-pointer hover:scale-105 transition-all"
+        <button
+          type="button"
+          className="cursor-pointer hover:scale-105 transition-all text-xl font-semibold"
           onClick={() => {
             setToday(currentDate);
           }}
         >
           Today
-        </h1>
+        </button>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>

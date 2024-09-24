@@ -1,5 +1,5 @@
-import { getCurrentUser } from "../session";
 import prisma from "@/lib/prisma";
+import { getCurrentUser } from "../session";
 
 export async function getAllUsers() {
   const loggedInUser = await getCurrentUser();
@@ -17,7 +17,8 @@ export async function getAllUsers() {
     });
 
     return [...usersData];
-  } catch (error: any) {
+  } catch (error) {
+    // eslint-disable-next-line no-console
     console.error("Error fetching all users:", error);
     throw new Error("Error fetching all users");
   }
