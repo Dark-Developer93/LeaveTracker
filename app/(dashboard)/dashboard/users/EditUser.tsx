@@ -96,11 +96,11 @@ const EditUser = ({ user, users }: EditUserProps) => {
     try {
       const supervisorIds = users
         .filter((user) => values.supervisors.includes(user.email))
-        .map((user) => user.id);
+        .map((user) => user.email);
 
       const superviseeIds = users
         .filter((user) => values.supervisees.includes(user.email))
-        .map((user) => user.id);
+        .map((user) => user.email);
 
       const data = {
         id,
