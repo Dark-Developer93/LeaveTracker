@@ -85,7 +85,7 @@ const EditUser = ({ user, users }: EditUserProps) => {
 
     // Check if there are any common emails in both supervisors and supervisees
     const commonEmails = values.supervisors.filter((email) =>
-      values.supervisees.includes(email)
+      values.supervisees.includes(email),
     );
 
     if (commonEmails.length > 0) {
@@ -95,12 +95,16 @@ const EditUser = ({ user, users }: EditUserProps) => {
 
     try {
       const supervisorIds = users
-        .filter((user) => values.supervisors.includes(user.email))
-        .map((user) => user.email);
+        .filter((selectedUser) =>
+          values.supervisors.includes(selectedUser.email),
+        )
+        .map((selectedUser) => selectedUser.email);
 
       const superviseeIds = users
-        .filter((user) => values.supervisees.includes(user.email))
-        .map((user) => user.email);
+        .filter((selectedUser) =>
+          values.supervisees.includes(selectedUser.email),
+        )
+        .map((selectedUser) => selectedUser.email);
 
       const data = {
         id,
@@ -332,11 +336,10 @@ const EditUser = ({ user, users }: EditUserProps) => {
                 <FormControl>
                   <MultipleSelector
                     {...field}
-                    defaultOptions={filteredUsers
-                      .map((user) => ({
-                        value: user.email,
-                        label: user.name || "",
-                      }))}
+                    defaultOptions={filteredUsers.map((selectedUser) => ({
+                      value: selectedUser.email,
+                      label: selectedUser.name || "",
+                    }))}
                     placeholder={
                       field.value.length === 0
                         ? "Select supervisors for this user"
@@ -350,11 +353,13 @@ const EditUser = ({ user, users }: EditUserProps) => {
                     value={field.value.map((email) => ({
                       value: email,
                       label:
-                        users.find((user) => user.email === email)?.name || "",
+                        users.find(
+                          (selectedUser) => selectedUser.email === email,
+                        )?.name || "",
                     }))}
                     onChange={(value: Option[]) => {
                       const supervisorEmails = value.map(
-                        (option) => option.value
+                        (option) => option.value,
                       );
                       form.setValue("supervisors", supervisorEmails);
                       field.onChange(supervisorEmails);
@@ -375,11 +380,10 @@ const EditUser = ({ user, users }: EditUserProps) => {
                 <FormControl>
                   <MultipleSelector
                     {...field}
-                    defaultOptions={filteredUsers
-                      .map((user) => ({
-                        value: user.email,
-                        label: user.name,
-                      }))}
+                    defaultOptions={filteredUsers.map((selectedUser) => ({
+                      value: selectedUser.email,
+                      label: selectedUser.name,
+                    }))}
                     placeholder={
                       field.value.length === 0 ? "Select supervisees" : ""
                     }
@@ -391,11 +395,13 @@ const EditUser = ({ user, users }: EditUserProps) => {
                     value={field.value.map((email) => ({
                       value: email,
                       label:
-                        users.find((user) => user.email === email)?.name || "",
+                        users.find(
+                          (selectedUser) => selectedUser.email === email,
+                        )?.name || "",
                     }))}
                     onChange={(value: Option[]) => {
                       const superviseeEmails = value.map(
-                        (option) => option.value
+                        (option) => option.value,
                       );
                       form.setValue("supervisees", superviseeEmails);
                       field.onChange(superviseeEmails);
