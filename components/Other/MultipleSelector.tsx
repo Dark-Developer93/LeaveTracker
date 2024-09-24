@@ -37,7 +37,7 @@ interface MultipleSelectorProps {
   /**
    * Only work with `onSearch` prop. Trigger search when `onFocus`.
    * For example, when user click on the input, it will trigger the search to get initial options.
-   **/
+   * */
   triggerSearchOnFocus?: boolean;
   /** async search */
   onSearch?: (value: string) => Promise<Option[]>;
@@ -45,7 +45,7 @@ interface MultipleSelectorProps {
    * sync search. This search will not showing loadingIndicator.
    * The rest props are the same as async search.
    * i.e.: creatable, groupBy, delay.
-   **/
+   * */
   onSearchSync?: (value: string) => Option[];
   onChange?: (options: Option[]) => void;
   /** Limit the maximum number of selected options. */
@@ -122,33 +122,32 @@ function transToGroupOption(options: Option[], groupBy?: string) {
 }
 
 function removePickedOption(groupOption: GroupOption, picked: Option[]) {
-  const cloneOption = JSON.parse(JSON.stringify(groupOption)) as GroupOption;
+  const cloneOption = Object.entries(groupOption).reduce(
+    (acc, [key, value]) => {
+      acc[key] = value.filter(
+        (val) => !picked.some((p) => p.value === val.value),
+      );
+      return acc;
+    },
+    {} as GroupOption,
+  );
 
-  for (const [key, value] of Object.entries(cloneOption)) {
-    cloneOption[key] = value.filter(
-      (val) => !picked.find((p) => p.value === val.value)
-    );
-  }
   return cloneOption;
 }
-
-function isOptionsExist(groupOption: GroupOption, targetOption: Option[]) {
-  for (const [, value] of Object.entries(groupOption)) {
-    if (
-      value.some((option) => targetOption.find((p) => p.value === option.value))
-    ) {
-      return true;
-    }
-  }
-  return false;
-}
-
+const isOptionsExist = (
+  groupOption: GroupOption,
+  targetOption: Option[],
+): boolean => {
+  return Object.values(groupOption).some((value) =>
+    value.some((option) => targetOption.some((p) => p.value === option.value)),
+  );
+};
 /**
  * The `CommandEmpty` of shadcn/ui will cause the cmdk empty not rendering correctly.
  * So we create one and copy the `Empty` implementation from `cmdk`.
  *
  * @reference: https://github.com/hsuanyi-chou/shadcn-ui-expansions/issues/34#issuecomment-1949561607
- **/
+ * */
 const CommandEmpty = forwardRef<
   HTMLDivElement,
   React.ComponentProps<typeof CommandPrimitive.Empty>
@@ -200,7 +199,7 @@ const MultipleSelector = React.forwardRef<
       inputProps,
       hideClearAllButton = false,
     }: MultipleSelectorProps,
-    ref: React.Ref<MultipleSelectorRef>
+    ref: React.Ref<MultipleSelectorRef>,
   ) => {
     const inputRef = React.useRef<HTMLInputElement>(null);
     const [open, setOpen] = React.useState(false);
@@ -210,7 +209,7 @@ const MultipleSelector = React.forwardRef<
 
     const [selected, setSelected] = React.useState<Option[]>(value || []);
     const [options, setOptions] = React.useState<GroupOption>(
-      transToGroupOption(arrayDefaultOptions, groupBy)
+      transToGroupOption(arrayDefaultOptions, groupBy),
     );
     const [inputValue, setInputValue] = React.useState("");
     const debouncedSearchTerm = useDebounce(inputValue, delay || 500);
@@ -223,7 +222,7 @@ const MultipleSelector = React.forwardRef<
         focus: () => inputRef?.current?.focus(),
         reset: () => setSelected([]),
       }),
-      [selected]
+      [selected],
     );
 
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
@@ -244,7 +243,7 @@ const MultipleSelector = React.forwardRef<
         setSelected(newOptions);
         onChange?.(newOptions);
       },
-      [onChange, selected]
+      [onChange, selected],
     );
 
     const handleKeyDown = React.useCallback(
@@ -266,7 +265,7 @@ const MultipleSelector = React.forwardRef<
           }
         }
       },
-      [handleUnselect, selected]
+      [handleUnselect, selected],
     );
 
     useEffect(() => {
@@ -321,7 +320,7 @@ const MultipleSelector = React.forwardRef<
         }
       };
 
-      void exec();
+      exec();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedSearchTerm, groupBy, open, triggerSearchOnFocus]);
 
@@ -347,11 +346,11 @@ const MultipleSelector = React.forwardRef<
         }
       };
 
-      void exec();
+      exec();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedSearchTerm, groupBy, open, triggerSearchOnFocus]);
 
-    const CreatableItem = () => {
+    const CreatableItem = React.useCallback(() => {
       if (!creatable) return undefined;
       if (
         isOptionsExist(options, [{ value: inputValue, label: inputValue }]) ||
@@ -360,24 +359,31 @@ const MultipleSelector = React.forwardRef<
         return undefined;
       }
 
+      const handleMouseDown = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+      };
+
+      const handleSelect = (selectedValue: string) => {
+        if (selected.length >= maxSelected) {
+          onMaxSelected?.(selected.length);
+          return;
+        }
+        setInputValue("");
+        const newOptions = [
+          ...selected,
+          { value: selectedValue, label: selectedValue },
+        ];
+        setSelected(newOptions);
+        onChange?.(newOptions);
+      };
+
       const Item = (
         <CommandItem
           value={inputValue}
           className="cursor-pointer"
-          onMouseDown={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-          onSelect={(value: string) => {
-            if (selected.length >= maxSelected) {
-              onMaxSelected?.(selected.length);
-              return;
-            }
-            setInputValue("");
-            const newOptions = [...selected, { value, label: value }];
-            setSelected(newOptions);
-            onChange?.(newOptions);
-          }}
+          onMouseDown={handleMouseDown}
+          onSelect={handleSelect}
         >
           {`Create "${inputValue}"`}
         </CommandItem>
@@ -394,7 +400,18 @@ const MultipleSelector = React.forwardRef<
       }
 
       return undefined;
-    };
+    }, [
+      creatable,
+      debouncedSearchTerm,
+      inputValue,
+      isLoading,
+      onChange,
+      onMaxSelected,
+      onSearch,
+      options,
+      selected,
+      maxSelected,
+    ]);
 
     const EmptyItem = React.useCallback(() => {
       if (!emptyIndicator) return undefined;
@@ -413,7 +430,7 @@ const MultipleSelector = React.forwardRef<
 
     const selectables = React.useMemo<GroupOption>(
       () => removePickedOption(options, selected),
-      [options, selected]
+      [options, selected],
     );
 
     /** Avoid Creatable Selector freezing or lagging when paste a long string. */
@@ -423,8 +440,10 @@ const MultipleSelector = React.forwardRef<
       }
 
       if (creatable) {
-        return (value: string, search: string) => {
-          return value.toLowerCase().includes(search.toLowerCase()) ? 1 : -1;
+        return (valueToFilter: string, search: string) => {
+          return valueToFilter.toLowerCase().includes(search.toLowerCase())
+            ? 1
+            : -1;
         };
       }
       // Using default filter in `cmdk`. We don't have to provide it.
@@ -441,7 +460,7 @@ const MultipleSelector = React.forwardRef<
         }}
         className={cn(
           "h-auto overflow-visible bg-transparent",
-          commandProps?.className
+          commandProps?.className,
         )}
         shouldFilter={
           commandProps?.shouldFilter !== undefined
@@ -451,17 +470,26 @@ const MultipleSelector = React.forwardRef<
         filter={commandFilter()}
       >
         <div
+          role="button"
+          tabIndex={0}
           className={cn(
             "min-h-10 rounded-md border border-input text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
             {
               "px-3 py-2": selected.length !== 0,
               "cursor-text": !disabled && selected.length !== 0,
             },
-            className
+            className,
           )}
           onClick={() => {
             if (disabled) return;
             inputRef?.current?.focus();
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              if (disabled) return;
+              inputRef?.current?.focus();
+            }
           }}
         >
           <div className="relative flex flex-wrap gap-1">
@@ -472,16 +500,17 @@ const MultipleSelector = React.forwardRef<
                   className={cn(
                     "data-[disabled]:bg-muted-foreground data-[disabled]:text-muted data-[disabled]:hover:bg-muted-foreground",
                     "data-[fixed]:bg-muted-foreground data-[fixed]:text-muted data-[fixed]:hover:bg-muted-foreground",
-                    badgeClassName
+                    badgeClassName,
                   )}
                   data-fixed={option.fixed}
                   data-disabled={disabled || undefined}
                 >
                   {option.label}
                   <button
+                    type="button"
                     className={cn(
                       "ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2",
-                      (disabled || option.fixed) && "hidden"
+                      (disabled || option.fixed) && "hidden",
                     )}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
@@ -505,9 +534,9 @@ const MultipleSelector = React.forwardRef<
               ref={inputRef}
               value={inputValue}
               disabled={disabled}
-              onValueChange={(value) => {
-                setInputValue(value);
-                inputProps?.onValueChange?.(value);
+              onValueChange={(selectedOptions) => {
+                setInputValue(selectedOptions);
+                inputProps?.onValueChange?.(selectedOptions);
               }}
               onBlur={(event) => {
                 if (!onScrollbar) {
@@ -517,7 +546,9 @@ const MultipleSelector = React.forwardRef<
               }}
               onFocus={(event) => {
                 setOpen(true);
-                triggerSearchOnFocus && onSearch?.(debouncedSearchTerm);
+                if (triggerSearchOnFocus) {
+                  onSearch?.(debouncedSearchTerm);
+                }
                 inputProps?.onFocus?.(event);
               }}
               placeholder={
@@ -532,7 +563,7 @@ const MultipleSelector = React.forwardRef<
                   "px-3 py-2": selected.length === 0,
                   "ml-1": selected.length !== 0,
                 },
-                inputProps?.className
+                inputProps?.className,
               )}
             />
             <button
@@ -547,7 +578,7 @@ const MultipleSelector = React.forwardRef<
                   disabled ||
                   selected.length < 1 ||
                   selected.filter((s) => s.fixed).length === selected.length) &&
-                  "hidden"
+                  "hidden",
               )}
             >
               <X />
@@ -569,7 +600,7 @@ const MultipleSelector = React.forwardRef<
               }}
             >
               {isLoading ? (
-                <>{loadingIndicator}</>
+                loadingIndicator
               ) : (
                 <>
                   {EmptyItem()}
@@ -607,7 +638,7 @@ const MultipleSelector = React.forwardRef<
                               className={cn(
                                 "cursor-pointer",
                                 option.disable &&
-                                  "cursor-default text-muted-foreground"
+                                  "cursor-default text-muted-foreground",
                               )}
                             >
                               {option.label}
@@ -624,7 +655,7 @@ const MultipleSelector = React.forwardRef<
         </div>
       </Command>
     );
-  }
+  },
 );
 
 MultipleSelector.displayName = "MultipleSelector";
