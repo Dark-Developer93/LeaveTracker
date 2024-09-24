@@ -1,14 +1,17 @@
 import prisma from "@/lib/prisma";
 import { getCurrentUser } from "../session";
+import { Role } from "@prisma/client";
+
+const allowedRoles = ["ADMIN", "MODERATOR", "SUPERVISOR"];
 
 export async function getAllLeaveDays() {
   const loggedInUser = await getCurrentUser();
   if (!loggedInUser) {
     return [];
   }
-  const isAdmin = loggedInUser.role === "ADMIN";
+  const isAuthorized = allowedRoles.includes(loggedInUser.role as Role);
 
-  if (!isAdmin) {
+  if (!isAuthorized) {
     return [];
   }
   try {
