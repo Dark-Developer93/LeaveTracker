@@ -13,6 +13,7 @@ type EditUserData = {
   supervisors: string[];
   supervisees: string[];
 };
+const allowedRoles = ["SUPERVISOR", "ADMIN", "MODERATOR"];
 
 export async function updateUser(data: EditUserData) {
   const loggedInUser = await getCurrentUser();
@@ -36,3 +37,21 @@ export async function updateUser(data: EditUserData) {
 
   return { message: "User updated successfully" };
 }
+
+export async function getAllSuperviseeUsers() {
+  const loggedInUser = await getCurrentUser();
+  if (!allowedRoles.includes(loggedInUser?.role as Role)) {
+    throw new Error("You are not permitted to perform this action");
+  }
+
+  const supervisees = await prisma.user.findMany({
+    where: {
+      supervisors: {
+        has: loggedInUser?.email,
+      },
+    },
+  });
+
+  return supervisees;
+}
+
