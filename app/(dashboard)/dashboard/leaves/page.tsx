@@ -2,9 +2,9 @@ import Container from "@/components/Common/Container";
 import TableWrapper from "@/components/Common/TableWrapper";
 import { getAllLeaveDays } from "@/lib/data/getLeaveDays";
 import { Leave, Role } from "@prisma/client";
-import LeavesTable from "./LeavesTable";
 import { getCurrentUser } from "@/lib/session";
 import { getAllSuperviseeUsers } from "@/app/actions/userActions";
+import LeavesTable from "./LeavesTable";
 
 const AdminLeaves = async () => {
   const allLeaves = await getAllLeaveDays();
@@ -21,9 +21,7 @@ const AdminLeaves = async () => {
     filteredLeaves = allLeaves;
   } else if (currentUser?.role === "SUPERVISOR") {
     filteredLeaves = allLeaves.filter((leave) =>
-      allSuperviseeUsers
-    .map((user) => user.email)
-    .includes(leave.userEmail)
+      allSuperviseeUsers.map((user) => user.email).includes(leave.userEmail),
     );
   }
 

@@ -17,10 +17,7 @@ interface LeaveProps {
   currentUserRole: Role;
 }
 
-const LeavesTable = ({
-  leaves,
-  currentUserRole,
-}: LeaveProps) => {
+const LeavesTable = ({ leaves, currentUserRole }: LeaveProps) => {
   return (
     <Table>
       <TableHeader className="whitespace-nowrap">
@@ -43,17 +40,18 @@ const LeavesTable = ({
         {leaves.map((leave) => (
           <TableRow key={leave.id}>
             <TableCell className="font-medium">
-              {leave.status !== LeaveStatus.APPROVED && currentUserRole !== "MODERATOR" && (
-                <EditLeave
-                  id={leave.id}
-                  days={leave.days}
-                  type={leave.type}
-                  year={leave.year}
-                  email={leave.userEmail}
-                  user={leave.userName}
-                  startDate={leave.startDate}
-                />
-              )}
+              {leave.status !== LeaveStatus.APPROVED &&
+                currentUserRole !== "MODERATOR" && (
+                  <EditLeave
+                    id={leave.id}
+                    days={leave.days}
+                    type={leave.type}
+                    year={leave.year}
+                    email={leave.userEmail}
+                    user={leave.userName}
+                    startDate={leave.startDate}
+                  />
+                )}
             </TableCell>
             <TableCell className="font-medium">{leave.userName}</TableCell>
             <TableCell className="font-medium">{leave.type}</TableCell>

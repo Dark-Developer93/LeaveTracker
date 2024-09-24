@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
-import { getCurrentUser } from "../session";
 import { Role } from "@prisma/client";
+import { getCurrentUser } from "../session";
 
 const allowedRoles = ["ADMIN", "MODERATOR", "SUPERVISOR"];
 
