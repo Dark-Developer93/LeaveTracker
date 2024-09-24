@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { BsCheckLg } from "react-icons/bs";
@@ -78,16 +78,41 @@ const EditUser = ({ user, users }: EditUserProps) => {
     } as DefaultValues,
   });
 
+  const filteredUsers = users.filter((u) => u.id !== user.id);
+
   async function SubmitEditUser(values: z.infer<typeof userFormSchema>) {
     const { id } = user;
-    try {
-      const formData = new FormData();
-      formData.append("id", id);
-      Object.entries(values).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
 
-      await updateUser(formData);
+    // Check if there are any common emails in both supervisors and supervisees
+    const commonEmails = values.supervisors.filter((email) =>
+      values.supervisees.includes(email)
+    );
+
+    if (commonEmails.length > 0) {
+      toast.error("A user cannot be both a supervisor and a supervisee.");
+      return;
+    }
+
+    try {
+      const supervisorIds = users
+        .filter((user) => values.supervisors.includes(user.email))
+        .map((user) => user.id);
+
+      const superviseeIds = users
+        .filter((user) => values.supervisees.includes(user.email))
+        .map((user) => user.id);
+
+      const data = {
+        id,
+        phone: values.phone,
+        department: values.department,
+        title: values.title,
+        role: values.role,
+        supervisors: supervisorIds.length ? supervisorIds : [],
+        supervisees: superviseeIds.length ? superviseeIds : [],
+      };
+
+      await updateUser(data);
 
       toast.success("User Edited Successfully", { duration: 4000 });
       setOpen(false);
@@ -96,8 +121,6 @@ const EditUser = ({ user, users }: EditUserProps) => {
       toast.error(`An error occurred: ${error}`);
     }
   }
-
-  console.log("user", user);
 
   return (
     <DialogWrapper
@@ -309,11 +332,16 @@ const EditUser = ({ user, users }: EditUserProps) => {
                 <FormControl>
                   <MultipleSelector
                     {...field}
-                    defaultOptions={filteredUsers.map((user) => ({
-                      value: user.email,
-                      label: user.name || "",
-                    }))}
-                    placeholder="Select supervisors for this user"
+                    defaultOptions={filteredUsers
+                      .map((user) => ({
+                        value: user.email,
+                        label: user.name || "",
+                      }))}
+                    placeholder={
+                      field.value.length === 0
+                        ? "Select supervisors for this user"
+                        : ""
+                    }
                     emptyIndicator={
                       <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
                         No results found.
@@ -347,11 +375,14 @@ const EditUser = ({ user, users }: EditUserProps) => {
                 <FormControl>
                   <MultipleSelector
                     {...field}
-                    defaultOptions={filteredUsers.map((user) => ({
-                      value: user.email,
-                      label: user.name || "",
-                    }))}
-                    placeholder="Select supervisees for this user"
+                    defaultOptions={filteredUsers
+                      .map((user) => ({
+                        value: user.email,
+                        label: user.name,
+                      }))}
+                    placeholder={
+                      field.value.length === 0 ? "Select supervisees" : ""
+                    }
                     emptyIndicator={
                       <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
                         No results found.
