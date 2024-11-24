@@ -1,11 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { BsCheckLg } from "react-icons/bs";
+import { Role, User } from "@prisma/client";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DialogWrapper from "@/components/Common/DialogWrapper";
 import toast from "react-hot-toast";
 import { IoPencil } from "react-icons/io5";
+import { PiCaretUpDownBold } from "react-icons/pi";
+
 import {
   Form,
   FormControl,
@@ -26,19 +32,16 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import MultipleSelector, { Option } from "@/components/Other/MultipleSelector";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PiCaretUpDownBold } from "react-icons/pi";
 import { cn } from "@/lib/utils";
-import { BsCheckLg } from "react-icons/bs";
-import { Role, User } from "@prisma/client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { UserRoles, orgDepartments, orgTitles } from "@/lib/data/dummy-data";
 import { updateUser } from "@/app/actions/userActions";
 
 type EditUserProps = {
   user: User;
+  users: User[];
 };
 
 type DefaultValues = {
@@ -46,20 +49,21 @@ type DefaultValues = {
   department: string;
   title: string;
   role: Role;
+  supervisors: string[];
+  supervisees: string[];
 };
 
-const EditUser = ({ user }: EditUserProps) => {
+const EditUser = ({ user, users }: EditUserProps) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
   const userFormSchema = z.object({
     phone: z.string().max(50),
-
     department: z.string(),
-
     title: z.string(),
-
     role: z.enum(UserRoles),
+    supervisors: z.array(z.string()),
+    supervisees: z.array(z.string()),
   });
 
   const form = useForm<z.infer<typeof userFormSchema>>({
@@ -69,19 +73,50 @@ const EditUser = ({ user }: EditUserProps) => {
       department: user.department,
       title: user.title,
       role: user.role,
+      supervisors: user.supervisors || [],
+      supervisees: user.supervisees || [],
     } as DefaultValues,
   });
 
+  const filteredUsers = users.filter((u) => u.id !== user.id);
+
   async function SubmitEditUser(values: z.infer<typeof userFormSchema>) {
     const { id } = user;
-    try {
-      const formData = new FormData();
-      formData.append("id", id);
-      Object.entries(values).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
 
-      await updateUser(formData);
+    // Check if there are any common emails in both supervisors and supervisees
+    const commonEmails = values.supervisors.filter((email) =>
+      values.supervisees.includes(email),
+    );
+
+    if (commonEmails.length > 0) {
+      toast.error("A user cannot be both a supervisor and a supervisee.");
+      return;
+    }
+
+    try {
+      const supervisorIds = users
+        .filter((selectedUser) =>
+          values.supervisors.includes(selectedUser.email),
+        )
+        .map((selectedUser) => selectedUser.email);
+
+      const superviseeIds = users
+        .filter((selectedUser) =>
+          values.supervisees.includes(selectedUser.email),
+        )
+        .map((selectedUser) => selectedUser.email);
+
+      const data = {
+        id,
+        phone: values.phone,
+        department: values.department,
+        title: values.title,
+        role: values.role,
+        supervisors: supervisorIds.length ? supervisorIds : [],
+        supervisees: superviseeIds.length ? superviseeIds : [],
+      };
+
+      await updateUser(data);
 
       toast.success("User Edited Successfully", { duration: 4000 });
       setOpen(false);
@@ -287,6 +322,92 @@ const EditUser = ({ user }: EditUserProps) => {
                     </Command>
                   </PopoverContent>
                 </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="supervisors"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Supervisors</FormLabel>
+                <FormControl>
+                  <MultipleSelector
+                    {...field}
+                    defaultOptions={filteredUsers.map((selectedUser) => ({
+                      value: selectedUser.email,
+                      label: selectedUser.name || "",
+                    }))}
+                    placeholder={
+                      field.value.length === 0
+                        ? "Select supervisors for this user"
+                        : ""
+                    }
+                    emptyIndicator={
+                      <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+                        No results found.
+                      </p>
+                    }
+                    value={field.value.map((email) => ({
+                      value: email,
+                      label:
+                        users.find(
+                          (selectedUser) => selectedUser.email === email,
+                        )?.name || "",
+                    }))}
+                    onChange={(value: Option[]) => {
+                      const supervisorEmails = value.map(
+                        (option) => option.value,
+                      );
+                      form.setValue("supervisors", supervisorEmails);
+                      field.onChange(supervisorEmails);
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="supervisees"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Supervisees</FormLabel>
+                <FormControl>
+                  <MultipleSelector
+                    {...field}
+                    defaultOptions={filteredUsers.map((selectedUser) => ({
+                      value: selectedUser.email,
+                      label: selectedUser.name,
+                    }))}
+                    placeholder={
+                      field.value.length === 0 ? "Select supervisees" : ""
+                    }
+                    emptyIndicator={
+                      <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+                        No results found.
+                      </p>
+                    }
+                    value={field.value.map((email) => ({
+                      value: email,
+                      label:
+                        users.find(
+                          (selectedUser) => selectedUser.email === email,
+                        )?.name || "",
+                    }))}
+                    onChange={(value: Option[]) => {
+                      const superviseeEmails = value.map(
+                        (option) => option.value,
+                      );
+                      form.setValue("supervisees", superviseeEmails);
+                      field.onChange(superviseeEmails);
+                    }}
+                  />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
