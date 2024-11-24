@@ -13,6 +13,11 @@ export const AdminRoutes = [
   { title: "Events", url: "/dashboard/events", icon: MdEvent },
 ];
 
+export const UserRoutes = [
+  { title: "Portal", url: "/portal", icon: HiMiniComputerDesktop },
+  { title: "History", url: "/portal/history", icon: MdHistory },
+];
+
 export const ModeratorRoutes = [
   { title: "Portal", url: "/portal", icon: HiMiniComputerDesktop },
   { title: "Dashboard", url: "/dashboard", icon: HiOutlineSquares2X2 },
@@ -21,15 +26,4 @@ export const ModeratorRoutes = [
   { title: "Leaves", url: "/dashboard/leaves", icon: TbListCheck },
   { title: "Users", url: "/dashboard/users", icon: HiOutlineUserGroup },
   { title: "Events", url: "/dashboard/events", icon: MdEvent },
-];
-
-export const SupervisorRoutes = [
-  { title: "Portal", url: "/portal", icon: HiMiniComputerDesktop },
-  { title: "History", url: "/portal/history", icon: MdHistory },
-  { title: "Leaves", url: "/dashboard/leaves", icon: TbListCheck },
-];
-
-export const UserRoutes = [
-  { title: "Portal", url: "/portal", icon: HiMiniComputerDesktop },
-  { title: "History", url: "/portal/history", icon: MdHistory },
 ];

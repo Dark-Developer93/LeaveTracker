@@ -9,15 +9,14 @@ import {
 import dayjs from "dayjs";
 import { formatDistance, subDays } from "date-fns";
 import { Badge } from "@/components/ui/badge";
-import { Leave, LeaveStatus, Role } from "@prisma/client";
+import { Leave, LeaveStatus } from "@prisma/client";
 import EditLeave from "./EditLeave";
 
-interface LeaveProps {
+type leaveProps = {
   leaves: Leave[];
-  currentUserRole: Role;
-}
+};
 
-const LeavesTable = ({ leaves, currentUserRole }: LeaveProps) => {
+const LeavesTable = ({ leaves }: leaveProps) => {
   return (
     <Table>
       <TableHeader className="whitespace-nowrap">
@@ -40,18 +39,17 @@ const LeavesTable = ({ leaves, currentUserRole }: LeaveProps) => {
         {leaves.map((leave) => (
           <TableRow key={leave.id}>
             <TableCell className="font-medium">
-              {leave.status !== LeaveStatus.APPROVED &&
-                currentUserRole !== "MODERATOR" && (
-                  <EditLeave
-                    id={leave.id}
-                    days={leave.days}
-                    type={leave.type}
-                    year={leave.year}
-                    email={leave.userEmail}
-                    user={leave.userName}
-                    startDate={leave.startDate}
-                  />
-                )}
+              {leave.status !== LeaveStatus.APPROVED && (
+                <EditLeave
+                  id={leave.id}
+                  days={leave.days}
+                  type={leave.type}
+                  year={leave.year}
+                  email={leave.userEmail}
+                  user={leave.userName}
+                  startDate={leave.startDate}
+                />
+              )}
             </TableCell>
             <TableCell className="font-medium">{leave.userName}</TableCell>
             <TableCell className="font-medium">{leave.type}</TableCell>

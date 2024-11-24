@@ -62,7 +62,7 @@ const UsersTable = ({ users }: UsersTableProps) => {
             <TableCell
             // className="text-right"
             >
-              <EditUser user={user} users={users} />
+              <EditUser user={user} />
             </TableCell>
             <TableCell
             // className="text-right"

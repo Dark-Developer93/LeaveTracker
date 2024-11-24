@@ -48,8 +48,8 @@ model VerificationToken {
 
 model User {
   id            String     @id @default(cuid())
-  name          String
-  email         String     @unique
+  name          String?
+  email         String?    @unique
   emailVerified DateTime?
   image         String?
   role          Role       @default(USER)
@@ -60,8 +60,6 @@ model User {
   accounts      Account[]
   balances      Balances[]
   sessions      Session[]
-  supervisors   String[]
-  supervisees   String[]
 }
 
 model LeaveType {
@@ -129,7 +127,6 @@ enum Role {
   USER
   ADMIN
   MODERATOR
-  SUPERVISOR
 }
 
 enum LeaveStatus {
