@@ -8,8 +8,6 @@ import {
   SupervisorRoutes,
 } from "./Routes";
 import { RenderIconsRoutes } from "./RenderRoutes";
-import ToggleDarkLight from "./ToggleDarkLight";
-import LogoutBtn from "./LogoutBtn";
 
 type SideBarProps = {
   user: User;
@@ -47,11 +45,6 @@ const SideBar = ({ user }: SideBarProps) => {
             {user?.role === "MODERATOR" && moderatorIconsRouter()}
             {user?.role === "SUPERVISOR" && supervisorIconsRouter()}
           </nav>
-        </div>
-        {/* BOTTOM PART  */}
-        <div className="flex flex-col items-center space-y-6 my-8">
-          <LogoutBtn />
-          <ToggleDarkLight />
         </div>
       </div>
     </div>
